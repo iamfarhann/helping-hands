@@ -4,22 +4,7 @@ import React from 'react';
 // import Box from '@material-ui/core/Box';
 import { Box, Container, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-// import MuiLink from '@material-ui/core/Link';
-// import ProTip from '../src/ProTip';
-// import Link from '../src/Link';
-
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="textSecondary" align="center">
-//       {'Copyright © '}
-//       <MuiLink color="inherit" href="https://material-ui.com/">
-//         Your Website
-//       </MuiLink>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+import ProjectCard from "../src/components/ProjectCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,35 +25,23 @@ export default function Index() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg">
-      <Grid container className={classes.testGrid} alignItems="flex-end" spacing={2}>
-        <Grid container item md={8} spacing={2}>
-         <Grid item>
-           <img src="/car_placeholder.png" width={230} height={230} />
-         </Grid>
+    <Container maxWidth="lg" style={{minHeight:"90vh"}}>
+      <Grid container  spacing={2}>
+        <Grid item md={3} >
+          <ProjectCard/>
         </Grid>
-        <Grid item md={4}>
-          helllo <br/>
-          ashdbhjasvdjh<br/>
+        <Grid item md={3} >
+          <ProjectCard/>
         </Grid>
-        {/* <Grid item md={12}>
-          4th
+        <Grid item md={3} >
+          <ProjectCard/>
         </Grid>
-        <Grid item md={12}>
-          5th
-        </Grid> */}
+        <Grid item md={3} >
+          <ProjectCard/>
+        </Grid>
+       
       </Grid>
 
-      {/* <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js example
-        </Typography> */}
-      {/* <Link href="/about" color="secondary">
-          Go to the about page
-        </Link> */}
-      {/* <ProTip /> */}
-      {/* <Copyright /> */}
-      {/* </Box> */}
     </Container>
   );
 }
