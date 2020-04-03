@@ -25,44 +25,51 @@ export default function Index() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg" style={{ minHeight: "100vh" }}>
-      <Grid maxWidth="lg" gutterBottom>
-        <img
-          src="./landing.jpg"
-          style={{ width: "100%", height: "auto", objectFit: "cover" }}
-        />
-      </Grid>
-      <Typography variant="h3" gutterBottom align="center" gutterBottom>
-        <br />
-        Top Projects
-        <br />
-      </Typography>
+    <Container maxWidth="xl" style={{ minHeight: "100vh",padding:0 }}>
 
-      <Grid container spacing={4}>
-        <Grid item md={3}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={3}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={3}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={3}>
-          <ProjectCard />
+      <Grid container  alignItems="flex-start" style={{ paddingBottom:20 }}>
+        <Grid item md={12} style={{backgroundImage:`url(${"./landing.jpg"})`,backgroundSize:"cover",minHeight:"500px"}}>
+          <Box width={1} >
+            <Typography variant="h3" style={{color:"white"}}>
+              hello
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
-      <Grid>
-        <Typography variant="h3" gutterBottom align="center" gutterBottom>
-          <br />
-          Fundraising Categories
-          <br />
-        </Typography>
-        <Category />
+      <Container maxWidth="lg" >
+      <Grid container spacing={4} alignItems="flex-start">
+        <Grid item md={12}>
+          <Typography variant="h3" gutterBottom align="center" >
+            Top Projects
+          </Typography>
+        </Grid>
+        <Grid item container spacing={4} md={12}>
+          <Grid item md={3}>
+            <ProjectCard />
+          </Grid>
+          <Grid item md={3}>
+            <ProjectCard />
+          </Grid>
+          <Grid item md={3}>
+            <ProjectCard />
+          </Grid>
+          <Grid item md={3}>
+            <ProjectCard />
+          </Grid>
+        </Grid>
+        <Grid item md={12}>
+          <Typography variant="h3" gutterBottom align="center">
+            Fundraising Categories
+          </Typography>
+        </Grid>
+        <Grid item md={12}>
+          <Category />
+        </Grid>
+        <Grid item md={12}>
+          <RankingCard />
+        </Grid>
       </Grid>
-      <Grid spacing={10}>
-        <RankingCard />
-      </Grid>
+      </Container>
     </Container>
   );
 }

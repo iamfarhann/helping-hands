@@ -5,7 +5,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { Box, Container, Grid } from "@material-ui/core";
+import { Box, Container, Grid,Paper } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -22,6 +22,7 @@ import FolderIcon from "@material-ui/icons/Folder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
 import PetsIcon from "@material-ui/icons/Pets";
+import LinearSlider from "./LinearSlider"
 
 const useStyles = makeStyles({
   root: {
@@ -45,21 +46,27 @@ export default function RankingCard() {
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
-    <Grid>
-      <Card>
-        <CardContent>
-          <Grid item md={3}>
+    <Paper>
+    <Grid container>
+          <Grid item md={3} >
             <List>
-              <ListItem>
+              <ListItem button>
                 <ListItemIcon>
                   <Avatar
                     alt="Remy Sharp"
                     src="https://source.unsplash.com/random"
                   />
                 </ListItemIcon>
-                <ListItemText primary="Shaukat Khanun foundation" />
+                <ListItemText disableTypography >
+                  <Box width={1}>
+                    <Typography variant="body1" gutterBottom>
+                      Shukat Khanam
+                    </Typography>
+                    <LinearSlider/>
+                  </Box>
+                </ListItemText>
               </ListItem>
-              <ListItem>
+              <ListItem button>
                 <ListItemIcon>
                   <Avatar
                     alt="Remy Sharp"
@@ -68,7 +75,7 @@ export default function RankingCard() {
                 </ListItemIcon>
                 <ListItemText primary="Edhi Foundation" />
               </ListItem>
-              <ListItem>
+              <ListItem button>
                 <ListItemIcon>
                   <Avatar
                     alt="Remy Sharp"
@@ -77,7 +84,7 @@ export default function RankingCard() {
                 </ListItemIcon>
                 <ListItemText primary="Sahara Trust" />
               </ListItem>
-              <ListItem>
+              <ListItem button>
                 <ListItemIcon>
                   <Avatar
                     alt="Remy Sharp"
@@ -86,7 +93,7 @@ export default function RankingCard() {
                 </ListItemIcon>
                 <ListItemText primary="SOS Children Village" />
               </ListItem>
-              <ListItem>
+              <ListItem button>
                 <ListItemIcon>
                   <Avatar
                     alt="Remy Sharp"
@@ -102,9 +109,7 @@ export default function RankingCard() {
               Top Projects
             </Typography>
           </Grid>
-        </CardContent>
-        <CardActions></CardActions>
-      </Card>
     </Grid>
+    </Paper>
   );
 }

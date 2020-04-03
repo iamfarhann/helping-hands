@@ -62,8 +62,8 @@ export default function ProjectCard(props) {
         title="Paella dish"
       />
       <CardContent>
-        <Box px={1} width={1}>
-          <FancySlider fontSize="inherit" />
+        <Box width={1}>
+          <FancySlider  />
         </Box>
         <Typography variant="h6" component="h1" gutterBottom>
           Brick Kiln School

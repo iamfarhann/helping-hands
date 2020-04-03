@@ -60,9 +60,9 @@ function Header(props) {
     <React.Fragment>
       <ElevationScroll {...props}>
         <AppBar color="primary">
-          <Container maxWidth="xl">
+          <Container maxWidth="xl" style={{padding:0}}>
             <Toolbar disableGutters>
-              <Container maxWidth="lg">
+              <Container maxWidth="xl"  style={{padding:0}}>
                 <img src="/logo.png" height="40px" />
               </Container>
             </Toolbar>
@@ -70,7 +70,7 @@ function Header(props) {
         </AppBar>
       </ElevationScroll>
 
-      <Toolbar style={{ marginBottom: "25px" }} />
+      <Toolbar style={{ marginBottom: "0px" }} />
     </React.Fragment>
   );
 }
