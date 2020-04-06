@@ -14,6 +14,7 @@ import {
   Box
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Link from "next/link";
 
 import FancySlider from "./fancySlider";
 import RoomIcon from "@material-ui/icons/Room";
@@ -63,16 +64,16 @@ export default function ProjectCard(props) {
       />
       <CardContent>
         <Box width={1}>
-          <FancySlider  />
+          <FancySlider />
         </Box>
         <Typography variant="h6" component="h1" gutterBottom>
-          Brick Kiln School
+          School in Slum
         </Typography>
 
         <Grid container spacing={1}>
           <Grid item md={11}>
             <Typography variant="body2" gutterBottom>
-              Edhi Foundation
+              Akhuwat Foundation
             </Typography>
           </Grid>
           <Grid item md={1}></Grid>
@@ -94,15 +95,17 @@ export default function ProjectCard(props) {
 
         <Typography variant="body2" gutterBottom>
           <br />
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          Help us build a school in the slums of lahore. We want to give these
+          orhpan and at risk childeren an opportunity to grow in life and become
+          a contributing citizen of Pakistan
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" fullWidth color="primary">
-          Dontate Now
-        </Button>
+        <Link href=".././project">
+          <Button size="small" variant="contained" fullWidth color="primary">
+            Dontate Now
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );

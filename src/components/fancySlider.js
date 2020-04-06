@@ -101,7 +101,7 @@ const IOSSlider = withStyles({
 
 const PrettoSlider = withStyles({
   root: {
-    color: "#52af77",
+    color: "#FF0000",
     height: 8
   },
   thumb: {

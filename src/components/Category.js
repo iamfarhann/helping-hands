@@ -46,13 +46,13 @@ export default function Category() {
     <Grid container>
       <Grid item md={3}>
         <List dense={dense}>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <LocalHospitalIcon />
             </ListItemIcon>
             <ListItemText primary="Health & Welleness" />
           </ListItem>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <PetsIcon />
             </ListItemIcon>
@@ -62,13 +62,13 @@ export default function Category() {
       </Grid>
       <Grid item md={3}>
         <List dense={dense}>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <BrushIcon />
             </ListItemIcon>
             <ListItemText primary="Arts & Culture" />
           </ListItem>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <PetsIcon />
             </ListItemIcon>
@@ -78,13 +78,13 @@ export default function Category() {
       </Grid>
       <Grid item md={3}>
         <List dense={dense}>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <SportsBasketballIcon />
             </ListItemIcon>
             <ListItemText primary="Sports" />
           </ListItem>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <AccessibleIcon />
             </ListItemIcon>
@@ -94,13 +94,13 @@ export default function Category() {
       </Grid>
       <Grid item md={3}>
         <List dense={dense}>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <PublicIcon />
             </ListItemIcon>
             <ListItemText primary="International Aid" />
           </ListItem>
-          <ListItem>
+          <ListItem button>
             <ListItemIcon>
               <HouseIcon />
             </ListItemIcon>

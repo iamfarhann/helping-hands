@@ -6,6 +6,7 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.9.1",
     "clsx": "latest",
+    "mui-image-slider": "^1.0.7",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",
