@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -24,6 +24,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
 import PetsIcon from "@material-ui/icons/Pets";
 import LinearSlider from "./LinearSlider";
+import RankingDescription from "./RankingDescription";
 
 const useStyles = makeStyles({
   root: {
@@ -42,171 +43,81 @@ const useStyles = makeStyles({
   }
 });
 
+const data = [
+  {
+    id: 123,
+    name: "Akhuwat Foundation",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    img: "https://source.unsplash.com/random",
+    points: 84
+  },
+  {
+    id: 124,
+    name: "Edhi Foundation",
+    description: "Edhi Description",
+    img: "https://source.unsplash.com/random",
+    points: 34
+  },
+  {
+    id: 127,
+    name: "Edhi Foundation",
+    description: "Edhi Description",
+    img: "https://source.unsplash.com/random",
+    points: 34
+  }
+]
+
 export default function RankingCard() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const [selected, setSelected] = useState(data[0]);
 
   return (
     <Paper>
-      <Grid container>
+      <Grid container style={{ paddingLeft: 16, paddingRight: 16 }} spacing={4}>
         <Grid item md={4}>
           <List>
-            <Link href=".././organization">
-              <ListItem button>
-                <ListItemIcon>
-                  <Avatar alt="Remy Sharp" src="./akhuwat-logo-1.png" />
-                </ListItemIcon>
-                <ListItemText disableTypography>
-                  <Box width={1}>
-                    <Typography variant="body1" gutterBottom>
-                      Akhuwat Foundation
-                    </Typography>
-                    <LinearSlider />
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
-            <Link href=".././organization">
-              <ListItem button>
-                <ListItemIcon>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="https://source.unsplash.com/random"
-                  />
-                </ListItemIcon>
-                <ListItemText disableTypography>
-                  <Box width={1}>
-                    <Typography variant="body1" gutterBottom>
-                      Edhi Foundation
-                    </Typography>
-                    <LinearSlider />
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
-            <Link href=".././organization">
-              <ListItem button>
-                <ListItemIcon>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="https://source.unsplash.com/random"
-                  />
-                </ListItemIcon>
-                <ListItemText disableTypography>
-                  <Box width={1}>
-                    <Typography variant="body1" gutterBottom>
-                      Sahara Trust
-                    </Typography>
-                    <LinearSlider />
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
-            <Link href=".././organization">
-              <ListItem button>
-                <ListItemIcon>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="https://source.unsplash.com/random"
-                  />
-                </ListItemIcon>
-                <ListItemText disableTypography>
-                  <Box width={1}>
-                    <Typography variant="body1" gutterBottom>
-                      FIF Foundation
-                    </Typography>
-                    <LinearSlider />
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
-            <Link href=".././organization">
-              <ListItem button>
-                <ListItemIcon>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="https://source.unsplash.com/random"
-                  />
-                </ListItemIcon>
-                <ListItemText disableTypography>
-                  <Box width={1}>
-                    <Typography variant="body1" gutterBottom>
-                      SOS Childern's Village
-                    </Typography>
-                    <LinearSlider />
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
+            {data.map(item => {
+              return (
+                <Grid container alignItems="center" spacing={1} key={item.id}>
+                  <Grid item md={2} align="center">
+                    <Link href="/organizations/[organization]" as={`/organizations/${item.name}`} >
+                      <Avatar alt="Remy Sharp" src={item.img} style={{ cursor: "pointer" }} />
+                    </Link>
+                  </Grid>
+                  <Grid item md={10}>
+                    <ListItem button onClick={() => setSelected(item)} selected={selected == item ? true : false}>
+                      <ListItemText disableTypography>
+                        <Grid container alignItems="center" spacing={2}>
+                          <Grid item md={10}>
+                            <Box width={1}>
+                              <Typography variant="body1" gutterBottom>
+                                {item.name}
+                              </Typography>
+                              <LinearSlider />
+                            </Box>
+                          </Grid>
+                          <Grid item md={2}>
+                            <Box height={40} width={40} display="flex" alignItems="center" justifyContent="center" border={1}  borderRadius={4} borderColor="red">
+                              <Typography variant="h6" >
+                                {item.points}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                    </ListItemText>
+                  </ListItem>
+                  </Grid>
+                </Grid>
+              )
+            })}
           </List>
         </Grid>
-        <Grid item md={1}>
-          <Box justifyContent="center" py={3} px={4} bgcolor="background.paper">
-            <Paper>
-              <Typography variant="h6" gutterBottom>
-                84
-              </Typography>
+          <Grid item md={8}>
+            <Paper elevation={0}>
+              <RankingDescription data={selected} />
             </Paper>
-          </Box>
-          <Box justifyContent="center" px={4} bgcolor="background.paper">
-            <Paper>
-              <Typography variant="h6" gutterBottom>
-                53
-              </Typography>
-            </Paper>
-          </Box>
-          <Box justifyContent="center" py={2} px={4} bgcolor="background.paper">
-            <Paper>
-              <Typography variant="h6" gutterBottom>
-                67
-              </Typography>
-            </Paper>
-          </Box>
-          <Box justifyContent="center" px={4} bgcolor="background.paper">
-            <Paper>
-              <Typography variant="h6" gutterBottom>
-                91
-              </Typography>
-            </Paper>
-          </Box>
-          <Box justifyContent="center" px={4} py={2} bgcolor="background.paper">
-            <Paper>
-              <Typography variant="h6" gutterBottom>
-                95
-              </Typography>
-            </Paper>
-          </Box>
+          </Grid>
         </Grid>
-        <Grid item md={7}>
-          <Paper elevation={1}>
-            <Box py={4} m={1}>
-              <Typography variant="body1" gutterBottom>
-                “To act as a model institution to alleviate the suffering of
-                patients with cancer through the application of modern methods
-                of curative and palliative therapy irrespective of their ability
-                to pay, the education of health care professionals and the
-                public and perform research into the causes and treatment of
-                cancer.”
-                <br />
-                The Shaukat Khanum Memorial Trust has established a number of
-                centres all over Pakistan that help in the awareness, diagnosis,
-                and treatment of cancer in Pakistan. Hospitals Shaukat Khanum
-                Memorial Cancer Hospital and Research Centre (Lahore, Pakistan),
-                the first specialised cancer facility in the entire region with
-                all the cancer diagnostic and therapeutic facilities under…
-                <br />
-                For more than two decades, SKMCH&RC has been committed to the
-                highest standards of patient care, education, and research. The
-                Hospital’s commitment has been recognized at both, national and
-                international levels. Accreditation by the American Society of
-                Health-System Pharmacists Pharmacy residency program of SKMCH&RC
-                has been accredited by the American Society of Health-System
-                Pharmacists
-              </Typography>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
     </Paper>
   );
 }

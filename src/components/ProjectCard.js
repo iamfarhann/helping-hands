@@ -52,7 +52,7 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-export default function ProjectCard(props) {
+export default function ProjectCard({data}) {
   const classes = useStyles();
 
   return (
@@ -67,7 +67,7 @@ export default function ProjectCard(props) {
           <FancySlider />
         </Box>
         <Typography variant="h6" component="h1" gutterBottom>
-          School in Slum
+          {data.name}
         </Typography>
 
         <Grid container spacing={1}>
@@ -92,16 +92,14 @@ export default function ProjectCard(props) {
             </Typography>
           </Grid>
         </Grid>
-
-        <Typography variant="body2" gutterBottom>
-          <br />
-          Help us build a school in the slums of lahore. We want to give these
-          orhpan and at risk childeren an opportunity to grow in life and become
-          a contributing citizen of Pakistan
+        <Box width={1} pt={1} height="100px">
+        <Typography variant="body2" gutterBottom style={{display:'-webkit-box',WebkitLineClamp: 5,WebkitBoxOrient:'vertical',overflow:'hidden',wordWrap:"break-word"}}>
+          {data.description}
         </Typography>
+        </Box>
       </CardContent>
       <CardActions>
-        <Link href=".././project">
+        <Link href="/projects/[project]" as="/projects/School in Slum">
           <Button size="small" variant="contained" fullWidth color="primary">
             Dontate Now
           </Button>

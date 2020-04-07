@@ -21,6 +21,31 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
+const data = [
+  {
+    id: 123,
+    name: "Akhuwat Foundation",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    img: "https://source.unsplash.com/random",
+    points: 84
+  },
+  {
+    id: 124,
+    name: "Edhi Foundation",
+    description: "Edhi Description",
+    img: "https://source.unsplash.com/random",
+    points: 34
+  },
+  {
+    id: 127,
+    name: "Edhi Foundation",
+    description: "Edhi Description",
+    img: "https://source.unsplash.com/random",
+    points: 34
+  }
+]
+
 export default function Index() {
   const classes = useStyles();
 
@@ -78,7 +103,16 @@ export default function Index() {
             </Typography>
           </Grid>
           <Grid item container spacing={4} md={12}>
-            <Grid item md={3}>
+            {
+              data.map(item=>{
+                return(
+                  <Grid item md={3} key={item.id}>
+                    <ProjectCard data={item}/>
+                  </Grid>
+                );
+              })
+            }
+            {/* <Grid item md={3}>
               <ProjectCard />
             </Grid>
             <Grid item md={3}>
@@ -89,7 +123,7 @@ export default function Index() {
             </Grid>
             <Grid item md={3}>
               <ProjectCard />
-            </Grid>
+            </Grid> */}
           </Grid>
           <Grid item md={12}>
             <Typography
