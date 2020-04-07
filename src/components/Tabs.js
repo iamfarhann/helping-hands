@@ -27,16 +27,20 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`scrollable-force-tabpanel-${index}`}
-      aria-labelledby={`scrollable-force-tab-${index}`}
-      {...other}
-    >
+    // <Typography
+    //   component="div"
+    //   role="tabpanel"
+    //   hidden={value !== index}
+    //   id={`scrollable-force-tabpanel-${index}`}
+    //   aria-labelledby={`scrollable-force-tab-${index}`}
+    //   {...other}
+    // >
+    <Box hidden={value !== index} component="div" {...other}>
+
+   
       {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
+    </Box>
+    // </Typography>
   );
 }
 
@@ -70,35 +74,33 @@ export default function ScrollableTabsButtonForce() {
   };
 
   return (
-    <Grid container className={classes.root} alignContent="center">
-      <AppBar position="static" color="default">
-        <Tabs
+    <Paper>
+      <Box width={1}>
+          <Box width={1}>
+          <Tabs
           value={value}
           onChange={handleChange}
-          variant="scrollable"
+          variant="fullWidth"
           scrollButtons="on"
           indicatorColor="primary"
           textColor="primary"
           aria-label="scrollable force tabs example"
-          padding="90"
         >
-          <Grid container item sm={4} justify="space-around">
+       
             <Tab label="Overview" icon={<BusinessIcon />} {...a11yProps(0)} />
-          </Grid>
-          <Grid container item sm={4} justify="space-around">
+        
+        
             <Tab label="Projects" icon={<BallotIcon />} {...a11yProps(1)} />
-          </Grid>
-          <Grid container item sm={4} justify="space-around">
+        
             <Tab
               label="Transparency Metrics"
               icon={<AssessmentIcon />}
               {...a11yProps(2)}
             />
-          </Grid>
         </Tabs>
-      </AppBar>
-
-      <TabPanel value={value} index={0}>
+          </Box>
+          <Box width={1}>
+          <TabPanel value={value} index={0}>
         <Typography variant="h6">Overview</Typography>
         <Typography variant="body1" paragraph>
           Akhuwat is the world’s largest Islamic micro-finance organization.
@@ -151,6 +153,38 @@ export default function ScrollableTabsButtonForce() {
       <TabPanel value={value} index={2}>
         Item Three
       </TabPanel>
-    </Grid>
+          </Box>
+      </Box>
+    </Paper>
+    // <Grid container className={classes.root} alignContent="center">
+    //   {/* <AppBar position="static" color="default"> */}
+    //     <Tabs
+    //       value={value}
+    //       onChange={handleChange}
+    //       variant="scrollable"
+    //       scrollButtons="on"
+    //       indicatorColor="primary"
+    //       textColor="primary"
+    //       aria-label="scrollable force tabs example"
+    //       padding="90"
+    //     >
+    //       <Grid container item sm={4} justify="space-around">
+    //         <Tab label="Overview" icon={<BusinessIcon />} {...a11yProps(0)} />
+    //       </Grid>
+    //       <Grid container item sm={4} justify="space-around">
+    //         <Tab label="Projects" icon={<BallotIcon />} {...a11yProps(1)} />
+    //       </Grid>
+    //       <Grid container item sm={4} justify="space-around">
+    //         <Tab
+    //           label="Transparency Metrics"
+    //           icon={<AssessmentIcon />}
+    //           {...a11yProps(2)}
+    //         />
+    //       </Grid>
+    //     </Tabs>
+    //   {/* </AppBar> */}
+
+      
+    // </Grid>
   );
 }

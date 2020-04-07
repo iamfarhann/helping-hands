@@ -43,39 +43,39 @@ export default function Organization() {
   console.log(query);
 
   return (
-    <Container maxWidth="xl" style={{ minHeight: "100vh", padding: 0 }}>
-      <Grid container style={{ paddingBottom: 50, paddingLeft: 0 }}>
+    <Container maxWidth="xl" style={{ minHeight: "100vh", padding: 0,background: "#F2F2F2", }}>
+      <Grid container >
         <Grid
           item
           container
           md={12}
-          style={{
-            backgroundImage: `url(${"/khawajasira-banner.jpg"})`,
-            backgroundSize: "cover",
-            minHeight: "425px"
-          }}
-        ></Grid>
-
-        <Grid item md={4}>
-          <Box width={1} px={20} my={-10}>
-            <Paper square variant="outlined">
-              <img
-                src="/logo_organization.png"
-                height="150px"
-                width="175px"
-                style={{
-                  borderRadius: "4px",
-                  objectFit: "cover",
-                  cursor: "pointer"
-                }}
-              />
-            </Paper>
+          
+          // style={{
+          //   backgroundImage: `url(${"/khawajasira-banner.jpg"})`,
+          //   backgroundSize: "cover",
+          //   minHeight: "425px"
+          // }}
+        >
+          <Box width={1} position="relative">
+          <img src="/khawajasira-banner.jpg" style={{objectFit:"cover",width:"100%",height:"425px",display:"block"}}/>
+            <Box  position="absolute" bottom="-55px" left="145px">
+                <img
+                  src="/logo_organization.png"
+                  height="150px"
+                  width="175px"
+                  style={{
+                    borderRadius: "4px",
+                    objectFit: "cover",
+                    cursor: "pointer"
+                  }}
+                />
+            </Box>
           </Box>
         </Grid>
       </Grid>
-      <Grid container style={{ background: "#F2F2F2" }} spacing={2}>
-        <Grid item md={8}>
-          <Box px={20} py={5}>
+      <Container maxWidth="lg" style={{  paddingTop: 64 }}>
+      <Grid container  spacing={2} alignItems="flex-start">
+        <Grid item md={6}>
             <Typography variant="h4" style={{ marginBottom: 10 }}>
               {query.organization}
             </Typography>
@@ -87,30 +87,31 @@ export default function Organization() {
             <Box py={2} width={300}>
               <LinearSlider />
             </Box>
-          </Box>
         </Grid>
-        <Grid item md={3}>
+        <Grid container item md={6} justify="flex-end" spacing={2}>
+          <Grid item >
           <Button
             size="small"
             variant="contained"
-            fullWidth
+            // fullWidth
             color="primary"
-            style={{ marginBottom: 10, marginTop: 55 }}
+            // style={{ marginBottom: 10, marginTop: 55 }}
           >
             Dontate Now
           </Button>
-          <Button size="small" variant="contained" fullWidth color="secondary">
+          </Grid>
+          <Grid item>
+          <Button size="small" variant="contained"  color="secondary">
             Favorite
           </Button>
+          </Grid>
         </Grid>
-        <Grid container item md={12}>
-          <Box px={20}>
-            <Paper>
+        <Grid item md={12}>
               <ScrollableTabsButtonForce />
-            </Paper>
-          </Box>
         </Grid>
       </Grid>
+      </Container>
+      
       <Grid
         item
         container
