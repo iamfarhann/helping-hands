@@ -1,162 +1,65 @@
-import React from "react";
-// import Container from '@material-ui/core/Container';
-// import Typography from '@material-ui/core/Typography';
-// import Box from '@material-ui/core/Box';
-import { Box, Container, Typography, Grid, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import ProjectCard from "../src/components/ProjectCard";
-import Category from "../src/components/Category";
-import RankingCard from "../src/components/RankingCard";
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary
-  },
-  testGrid: {
-    backgroundColor: "orange"
-  }
-}));
+import React, { Fragment } from 'react';
+import Head from 'next/head';
+import Sticky from 'react-stickynode';
+import { ThemeProvider } from 'styled-components';
+import { agencyTheme } from '../common/src/theme/agency';
+import { ResetCSS } from '../common/src/assets/css/style';
+import { GlobalStyle, AgencyWrapper } from '../containers/Agency/agency.style';
+import Navbar from '../containers/Agency/Navbar';
+import BannerSection from '../containers/Agency/BannerSection';
+import FeatureSection from '../containers/Agency/FeatureSection';
+import AboutUsSection from '../containers/Agency/AboutUsSection';
+import WorkHistory from '../containers/Agency/WorkHistory';
+import BlogSection from '../containers/Agency/BlogSection';
+import TestimonialSection from '../containers/Agency/TestimonialSection';
+import TeamSection from '../containers/Agency/TeamSection';
+import VideoSection from '../containers/Agency/VideoSection';
+import NewsletterSection from '../containers/Agency/NewsletterSection';
+import QualitySection from '../containers/Agency/QualitySection';
+import Footer from '../containers/Agency/Footer';
+import { DrawerProvider } from '../common/src/contexts/DrawerContext';
+import FaqSection from '../containers/Agency/FaqSection';
 
-
-const data = [
-  {
-    id: 123,
-    name: "Akhuwat Foundation",
-    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    img: "https://source.unsplash.com/random",
-    points: 84
-  },
-  {
-    id: 124,
-    name: "Edhi Foundation",
-    description: "Edhi Description",
-    img: "https://source.unsplash.com/random",
-    points: 34
-  },
-  {
-    id: 127,
-    name: "Edhi Foundation",
-    description: "Edhi Description",
-    img: "https://source.unsplash.com/random",
-    points: 34
-  }
-]
-
-export default function Index() {
-  const classes = useStyles();
-
+export default () => {
   return (
-    <Container maxWidth="xl" style={{ minHeight: "100vh", padding: 0 }}>
-      <Grid container style={{ paddingBottom: 20 }}>
-        <Grid
-          item
-          container
-          md={12}
-          style={{
-            backgroundImage: `url(${"./landing.jpg"})`,
-            backgroundSize: "cover",
-            minHeight: "650px"
-          }}
-        >
-          <Grid item md={8} justify="flex-end" alignItems="center">
-            <Box width={1} mx={15} my={20}>
-              <Typography
-                gutterBottom
-                variant="h2"
-                style={{ color: "white", fontWeight: "bold" }}
-              >
-                Pakistan's First <br />
-                Micro-Donation Platform <br />
-              </Typography>
-              <Typography
-                variant="body1"
-                gutterBottom
-                style={{ color: "white", fontWeight: "bold" }}
-              >
-                Through the power of giving, we make the world a better place.
-                Join today in our <br />
-                effort to make someone feel blessed today.
-                <br />
-                <br />
-              </Typography>
-              <Button size="medium" variant="contained" color="primary">
-                Dontate Now
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Container maxWidth="lg">
-        <Grid container spacing={4} alignItems="flex-start">
-          <Grid item md={12}>
-            <Typography
-              variant="h3"
-              gutterBottom
-              align="center"
-              style={{ fontWeight: "bold" }}
-            >
-              Top Projects
-            </Typography>
-          </Grid>
-          <Grid item container spacing={4} md={12}>
-            {
-              data.map(item=>{
-                return(
-                  <Grid item md={3} key={item.id}>
-                    <ProjectCard data={item}/>
-                  </Grid>
-                );
-              })
-            }
-            {/* <Grid item md={3}>
-              <ProjectCard />
-            </Grid>
-            <Grid item md={3}>
-              <ProjectCard />
-            </Grid>
-            <Grid item md={3}>
-              <ProjectCard />
-            </Grid>
-            <Grid item md={3}>
-              <ProjectCard />
-            </Grid> */}
-          </Grid>
-          <Grid item md={12}>
-            <Typography
-              variant="h3"
-              gutterBottom
-              align="center"
-              style={{ fontWeight: "bold" }}
-            >
-              Fundraising Categories
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-            <Category />
-          </Grid>
-          <Grid
-            item
-            md={12}
-            style={{
-              minHeight: "500px"
-            }}
-          >
-            <Typography
-              variant="h3"
-              gutterBottom
-              align="center"
-              style={{ fontWeight: "bold" }}
-            >
-              Top Organizations
-            </Typography>
-            <RankingCard />
-          </Grid>
-        </Grid>
-      </Container>
-    </Container>
+    <ThemeProvider theme={agencyTheme}>
+      <Fragment>
+        {/* Start agency head section */}
+        <Head>
+          <title>Agency | A react next landing page</title>
+          <meta name="theme-color" content="#10ac84" />
+          <meta name="Description" content="React next landing page" />
+          {/* Load google fonts */}
+          <link
+            href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"
+            rel="stylesheet"
+          />
+        </Head>
+        <ResetCSS />
+        <GlobalStyle />
+        {/* End of agency head section */}
+        {/* Start agency wrapper section */}
+        <AgencyWrapper>
+          <Sticky top={0} innerZ={9999} activeClass="sticky-nav-active">
+            <DrawerProvider>
+              <Navbar />
+            </DrawerProvider>
+          </Sticky>
+          <BannerSection />
+          <FeatureSection />
+          <AboutUsSection />
+          <WorkHistory />
+          <BlogSection />
+          <QualitySection />
+          <VideoSection />
+          <TestimonialSection />
+          <TeamSection />
+          <FaqSection />
+          <NewsletterSection />
+          <Footer />
+        </AgencyWrapper>
+        {/* End of agency wrapper section */}
+      </Fragment>
+    </ThemeProvider>
   );
-}
+};
