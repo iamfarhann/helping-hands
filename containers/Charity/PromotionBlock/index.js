@@ -1,19 +1,19 @@
-import React from 'react';
-import Link from 'next/link';
-import PropTypes from 'prop-types';
-import Box from 'common/src/components/Box';
-import Image from 'common/src/components/Image';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import Container from 'common/src/components/UI/Container';
+import React from "react";
+import Link from "next/link";
+import PropTypes from "prop-types";
+import Box from "../../../common/src/components/Box";
+import Image from "../../../common/src/components/Image";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import Container from "../../../common/src/components/UI/Container";
 import BlockWrapper, {
   ContentWrapper,
   List,
   Item,
   ImageWrapper,
-} from './promotionBlock.style';
+} from "./promotionBlock.style";
 
-import { promotionData } from 'common/src/data/Charity';
+import { promotionData } from "../../../common/src/data/Charity";
 
 const PromotionBlock = ({ row, col }) => {
   const { slogan, title, text1, text2, lists, image } = promotionData;
@@ -28,7 +28,7 @@ const PromotionBlock = ({ row, col }) => {
               <Text content={text1} />
               <Text content={text2} />
               <List>
-                {lists.map(item => (
+                {lists.map((item) => (
                   <Item key={`list_key${item.id}`}>{item.text}</Item>
                 ))}
               </List>
@@ -62,16 +62,16 @@ PromotionBlock.defaultProps = {
   // PromotionBlock row default style
   row: {
     flexBox: true,
-    flexWrap: 'wrap',
-    ml: '-15px',
-    mr: '-15px',
+    flexWrap: "wrap",
+    ml: "-15px",
+    mr: "-15px",
   },
   // PromotionBlock col default style
   col: {
-    width: ['100%', '50%', '50%'],
-    pl: '15px',
-    pr: '15px',
-    mb: '30px',
+    width: ["100%", "50%", "50%"],
+    pl: "15px",
+    pr: "15px",
+    mb: "30px",
   },
 };
 

@@ -1,19 +1,19 @@
-import React from 'react';
-import Link from 'next/link';
-import PropTypes from 'prop-types';
-import Box from 'common/src/components/Box';
-import Image from 'common/src/components/Image';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import Container from 'common/src/components/UI/Container';
+import React from "react";
+import Link from "next/link";
+import PropTypes from "prop-types";
+import Box from "../../../common/src/components/Box";
+import Image from "../../../common/src/components/Image";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import Container from "../../../common/src/components/UI/Container";
 import BlockWrapper, {
   ContentWrapper,
   List,
   Item,
   ImageWrapper,
-} from './humanityBlock.style';
+} from "./humanityBlock.style";
 
-import { humanityData } from 'common/src/data/Charity';
+import { humanityData } from "../../../common/src/data/Charity";
 
 const HumanityBlock = ({ row, col }) => {
   const { slogan, title, text, lists, image } = humanityData;
@@ -32,7 +32,7 @@ const HumanityBlock = ({ row, col }) => {
               <Heading content={title} />
               <Text content={text} />
               <List>
-                {lists.map(item => (
+                {lists.map((item) => (
                   <Item key={`list_key${item.id}`}>{item.text}</Item>
                 ))}
               </List>
@@ -61,16 +61,16 @@ HumanityBlock.defaultProps = {
   // HumanityBlock row default style
   row: {
     flexBox: true,
-    flexWrap: 'wrap',
-    ml: '-15px',
-    mr: '-15px',
+    flexWrap: "wrap",
+    ml: "-15px",
+    mr: "-15px",
   },
   // HumanityBlock col default style
   col: {
-    width: ['100%', '50%', '50%'],
-    pl: '15px',
-    pr: '15px',
-    mb: '30px',
+    width: ["100%", "50%", "50%"],
+    pl: "15px",
+    pr: "15px",
+    mb: "30px",
   },
 };
 

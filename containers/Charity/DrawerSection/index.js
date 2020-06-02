@@ -1,13 +1,12 @@
-import React, { useState, useContext } from 'react';
-import Scrollspy from 'react-scrollspy';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
-import Drawer from 'common/src/components/Drawer';
-import Image from 'common/src/components/Image';
-import { DrawerContext } from 'common/src/contexts/DrawerContext';
-import InnerWrapper, { SpreadButton } from './drawerSection.style';
+import React, { useState, useContext } from "react";
+import Scrollspy from "react-scrollspy";
+import AnchorLink from "react-anchor-link-smooth-scroll";
+import Drawer from "../../../common/src/components/Drawer";
+import Image from "../../../common/src/components/Image";
+import { DrawerContext } from "../../../common/src/contexts/DrawerContext";
+import InnerWrapper, { SpreadButton } from "./drawerSection.style";
 
-import { menuItems } from 'common/src/data/Charity';
-import heartImage from 'common/src/assets/image/charity/heart-red.png';
+import { menuItems } from "../../../common/src/data/Charity";
 
 const DrawerSection = () => {
   const [toggleState, setToggleState] = useState(false);
@@ -19,14 +18,14 @@ const DrawerSection = () => {
 
   const handleDrawerToggle = () => {
     dispatch({
-      type: 'TOGGLE',
+      type: "TOGGLE",
     });
     handleActiveClass();
   };
 
   const scrollItems = [];
 
-  menuItems.forEach(item => {
+  menuItems.forEach((item) => {
     scrollItems.push(item.path.slice(1));
   });
 
@@ -36,7 +35,7 @@ const DrawerSection = () => {
       placement="right"
       drawerHandler={
         <button
-          className={`drawer_btn ${toggleState ? 'active' : ''}`}
+          className={`drawer_btn ${toggleState ? "active" : ""}`}
           onClick={handleActiveClass}
           aria-label="drawer toggle button"
         >
@@ -78,7 +77,7 @@ const DrawerSection = () => {
         </Scrollspy>
         <SpreadButton>
           <span className="text">SPREAD</span>
-          <Image src={heartImage} alt="Charity Landing" />
+          <Image src="/image/charity/heart-red.png" alt="Charity Landing" />
         </SpreadButton>
       </InnerWrapper>
     </Drawer>

@@ -1,14 +1,14 @@
-import React from 'react';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import BlogPost from 'common/src/components/BlogPost';
-import Container from 'common/src/components/UI/Container';
+import React from "react";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import BlogPost from "../../../common/src/components/BlogPost";
+import Container from "../../../common/src/components/UI/Container";
 import SectionWrapper, {
   SectionHeader,
   FeatureWrapper,
-} from './featureSection.style';
+} from "./featureSection.style";
 
-import { featureData } from 'common/src/data/Charity';
+import { featureData } from "../../../common/src/data/Charity";
 
 const FeatureSection = () => {
   const { title, slogan, features } = featureData;
@@ -21,7 +21,7 @@ const FeatureSection = () => {
           <Text content={slogan} />
         </SectionHeader>
         <FeatureWrapper>
-          {features.map(item => (
+          {features.map((item) => (
             <BlogPost
               key={`option_key${item.id}`}
               thumbUrl={item.icon}

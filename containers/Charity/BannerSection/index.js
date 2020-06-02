@@ -1,25 +1,25 @@
-import React, { Fragment } from 'react';
-import Link from 'next/link';
-import { Icon } from 'react-icons-kit';
-import { chevronRight } from 'react-icons-kit/feather/chevronRight';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import Image from 'common/src/components/Image';
-import GlideCarousel from 'common/src/components/GlideCarousel';
-import GlideSlide from 'common/src/components/GlideCarousel/glideSlide';
-import LeftBar from './leftBar';
+import React, { Fragment } from "react";
+import Link from "next/link";
+import { Icon } from "react-icons-kit";
+import { chevronRight } from "react-icons-kit/feather/chevronRight";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import Image from "../../../common/src/components/Image";
+import GlideCarousel from "../../../common/src/components/GlideCarousel";
+import GlideSlide from "../../../common/src/components/GlideCarousel/glideSlide";
+import LeftBar from "./leftBar";
 import BannerWrapper, {
   ContentWrapper,
   TextArea,
   ImageArea,
   HighlightedText,
-} from './bannerSection.style';
+} from "./bannerSection.style";
 
-import { bannerSlides } from 'common/src/data/Charity';
+import { bannerSlides } from "../../../common/src/data/Charity";
 
 const BannerSection = () => {
   const glideOptions = {
-    type: 'carousel',
+    type: "carousel",
     perView: 1,
     gap: 0,
   };
@@ -35,18 +35,15 @@ const BannerSection = () => {
           </HighlightedText>
           <Heading
             content="Bring a smile to
-          Their faces."
+          their faces."
           />
           <Heading
             as="h4"
             content="A new way of giving back to 
             your loved charities."
           />
-          <Text
-            content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-          "
-          />
-          <Link href="#1">
+          <Text content="   Explore projects, view rankings of charity organizations, donate with just a click; all in all, in one place" />
+          <Link href="/project">
             <a className="learn__more-btn">
               <span className="hyphen" />
               <span className="btn_text">Explore Our Project</span>
@@ -61,7 +58,7 @@ const BannerSection = () => {
             prevButton={<span className="prev_arrow" />}
           >
             <Fragment>
-              {bannerSlides.map(slide => (
+              {bannerSlides.map((slide) => (
                 <GlideSlide key={slide.id}>
                   <Image src={slide.thumb_url} alt="Charity Landing" />
                 </GlideSlide>

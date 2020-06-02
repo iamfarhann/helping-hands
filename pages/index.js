@@ -1,64 +1,76 @@
-import React, { Fragment } from 'react';
-import Head from 'next/head';
-import Sticky from 'react-stickynode';
-import { ThemeProvider } from 'styled-components';
-import { agencyTheme } from '../common/src/theme/agency';
-import { ResetCSS } from '../common/src/assets/css/style';
-import { GlobalStyle, AgencyWrapper } from '../containers/Agency/agency.style';
-import Navbar from '../containers/Agency/Navbar';
-import BannerSection from '../containers/Agency/BannerSection';
-import FeatureSection from '../containers/Agency/FeatureSection';
-import AboutUsSection from '../containers/Agency/AboutUsSection';
-import WorkHistory from '../containers/Agency/WorkHistory';
-import BlogSection from '../containers/Agency/BlogSection';
-import TestimonialSection from '../containers/Agency/TestimonialSection';
-import TeamSection from '../containers/Agency/TeamSection';
-import VideoSection from '../containers/Agency/VideoSection';
-import NewsletterSection from '../containers/Agency/NewsletterSection';
-import QualitySection from '../containers/Agency/QualitySection';
-import Footer from '../containers/Agency/Footer';
-import { DrawerProvider } from '../common/src/contexts/DrawerContext';
-import FaqSection from '../containers/Agency/FaqSection';
+import React, { Fragment } from "react";
+import Head from "next/head";
+import Sticky from "react-stickynode";
+import { ThemeProvider } from "styled-components";
+import { charityTheme } from "../common/src/theme/charity";
+import { ResetCSS } from "../common/src/assets/css/style";
+import { DrawerProvider } from "../common/src/contexts/DrawerContext";
+import Navbar from "../containers/Charity/Navbar";
+import DrawerSection from "../containers/Charity/DrawerSection";
+import BannerSection from "../containers/Charity/BannerSection";
+import FeatureSection from "../containers/Charity/FeatureSection";
+import BranchSection from "../containers/Charity/BranchSection";
+import WorkSection from "../containers/Charity/WorkSection";
+import MilestoneBlock from "../containers/Charity/MilestoneBlock";
+import HumanityBlock from "../containers/Charity/HumanityBlock";
+import PromotionBlock from "../containers/Charity/PromotionBlock";
+import DonateSection from "../containers/Charity/DonateSection";
+import MapSection from "../containers/Charity/MapSection";
+import FundraiserSection from "../containers/Charity/FundraiserSection";
+import BlogSection from "../containers/Charity/BlogSection";
+import ClientBlock from "../containers/Charity/ClientBlock";
+import Footer from "../containers/Charity/Footer";
+import {
+  GlobalStyle,
+  CharityWrapper,
+  ContentWrapper,
+} from "../containers/Charity/charity.style";
 
 export default () => {
   return (
-    <ThemeProvider theme={agencyTheme}>
+    <ThemeProvider theme={charityTheme}>
       <Fragment>
-        {/* Start agency head section */}
+        {/* Start charity head section */}
         <Head>
-          <title>Agency | A react next landing page</title>
-          <meta name="theme-color" content="#10ac84" />
+          <title>Charity | A react next landing page</title>
           <meta name="Description" content="React next landing page" />
+          <meta name="theme-color" content="#FCF22B" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
           {/* Load google fonts */}
           <link
-            href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap"
             rel="stylesheet"
           />
         </Head>
         <ResetCSS />
         <GlobalStyle />
-        {/* End of agency head section */}
-        {/* Start agency wrapper section */}
-        <AgencyWrapper>
+        {/* End of charity head section */}
+        {/* Start charity wrapper section */}
+        <CharityWrapper>
           <Sticky top={0} innerZ={9999} activeClass="sticky-nav-active">
-            <DrawerProvider>
-              <Navbar />
-            </DrawerProvider>
+            <Navbar />
           </Sticky>
-          <BannerSection />
-          <FeatureSection />
-          <AboutUsSection />
-          <WorkHistory />
-          <BlogSection />
-          <QualitySection />
-          <VideoSection />
-          <TestimonialSection />
-          <TeamSection />
-          <FaqSection />
-          <NewsletterSection />
+          <DrawerProvider>
+            <DrawerSection />
+          </DrawerProvider>
+          <ContentWrapper>
+            <BannerSection />
+            <FeatureSection />
+            <BranchSection />
+            <FundraiserSection />
+            <PromotionBlock />
+            <HumanityBlock />
+            <PromotionBlock />
+
+            <BlogSection />
+            <ClientBlock />
+          </ContentWrapper>
           <Footer />
-        </AgencyWrapper>
-        {/* End of agency wrapper section */}
+        </CharityWrapper>
+        {/* End of charity wrapper section */}
       </Fragment>
     </ThemeProvider>
   );

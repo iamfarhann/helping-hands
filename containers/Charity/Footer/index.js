@@ -1,21 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
-import Box from 'common/src/components/Box';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import Logo from 'common/src/components/UIElements/Logo';
-import Container from 'common/src/components/UI/Container';
+import React from "react";
+import PropTypes from "prop-types";
+import Link from "next/link";
+import Box from "../../../common/src/components/Box";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import Logo from "../../../common/src/components/UIElements/Logo";
+import Container from "../../../common/src/components/UI/Container";
 import FooterWrapper, {
   List,
   ListItem,
   CopyrightText,
   SocialList,
   SelectWrapper,
-} from './footer.style';
+} from "./footer.style";
 
-import LogoImage from 'common/src/assets/image/charity/logo.svg';
-import { menuWidgets, socialLinks } from 'common/src/data/Charity';
+import { menuWidgets, socialLinks } from "../../../common/src/data/Charity";
 
 const Footer = ({ row, col, colOne, colTwo }) => {
   return (
@@ -26,13 +25,13 @@ const Footer = ({ row, col, colOne, colTwo }) => {
             <Logo
               className="logo"
               href="/charity"
-              logoSrc={LogoImage}
+              logoSrc="/image/charity/logo.png"
               title="Agency"
             />
-            <Text className="text" content="EU: +077 1456 5924" />
-            <Text className="text" content="US: +361-541-4241" />
+            <Text className="text" content="PK: +92 324 4314039" />
+
             <Link href="#1">
-              <a className="mail">hello@redq.io</a>
+              <a className="mail">hello@esaar.org.pk</a>
             </Link>
             <SelectWrapper>
               <select aria-label="language switcher">
@@ -55,7 +54,7 @@ const Footer = ({ row, col, colOne, colTwo }) => {
           </Box>
           {/* End of logo column */}
           <Box className="col-two" {...colTwo}>
-            {menuWidgets.map(widget => (
+            {menuWidgets.map((widget) => (
               <Box
                 className="col"
                 {...col}
@@ -67,7 +66,7 @@ const Footer = ({ row, col, colOne, colTwo }) => {
                   content={widget.title}
                 />
                 <List>
-                  {widget.menu.map(item => (
+                  {widget.menu.map((item) => (
                     <ListItem key={`list__item-${item.id}`}>
                       <Link href={item.link}>
                         <a>{item.text}</a>
@@ -85,11 +84,11 @@ const Footer = ({ row, col, colOne, colTwo }) => {
           <CopyrightText>
             <Text
               className="text"
-              content="© 2019 RedQ Inc. All Rights Reserved"
+              content="© 2020 Esaar Inc. All Rights Reserved"
             />
           </CopyrightText>
           <SocialList>
-            {socialLinks.map(item => (
+            {socialLinks.map((item) => (
               <li className={item.name} key={`social__link-key${item.id}`}>
                 <Link href={item.link}>
                   <a aria-label="social share link">{item.icon}</a>
@@ -117,30 +116,30 @@ Footer.defaultProps = {
   // Footer row default style
   row: {
     flexBox: true,
-    flexWrap: 'wrap',
-    ml: '-15px',
-    mr: '-15px',
+    flexWrap: "wrap",
+    ml: "-15px",
+    mr: "-15px",
   },
   // Footer col one style
   colOne: {
-    width: ['100%', '30%', '35%', '30%'],
-    mt: [0, '13px', '0'],
-    mb: ['30px', 0],
-    pl: ['15px', 0],
-    pr: ['15px', '15px', 0],
+    width: ["100%", "30%", "35%", "30%"],
+    mt: [0, "13px", "0"],
+    mb: ["30px", 0],
+    pl: ["15px", 0],
+    pr: ["15px", "15px", 0],
   },
   // Footer col two style
   colTwo: {
-    width: ['100%', '70%', '65%', '70%'],
+    width: ["100%", "70%", "65%", "70%"],
     flexBox: true,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   // Footer col default style
   col: {
-    width: ['100%', '50%', '50%', '33.33%'],
-    pl: '15px',
-    pr: '15px',
-    mb: '30px',
+    width: ["100%", "50%", "50%", "33.33%"],
+    pl: "15px",
+    pr: "15px",
+    mb: "30px",
   },
 };
 

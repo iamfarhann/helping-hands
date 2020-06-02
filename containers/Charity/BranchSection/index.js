@@ -1,23 +1,23 @@
-import React from 'react';
-import Link from 'next/link';
-import Fade from 'react-reveal/Fade';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import Image from 'common/src/components/Image';
-import Tab, { Panel } from 'common/src/components/Tabs';
-import SectionWrapper, { ContentWrapper } from './branchSection.style';
+import React from "react";
+import Link from "next/link";
+import Fade from "react-reveal/Fade";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import Image from "../../../common/src/components/Image";
+import Tab, { Panel } from "../../../common/src/components/Tabs";
+import SectionWrapper, { ContentWrapper } from "./branchSection.style";
 
-import { branchData } from 'common/src/data/Charity';
+import { branchData } from "../../../common/src/data/Charity";
 
 const BranchSection = () => {
-  const title = text => {
+  const title = (text) => {
     return { __html: text };
   };
 
   return (
     <SectionWrapper id="branch">
       <Tab active={2}>
-        {branchData.map(item => (
+        {branchData.map((item) => (
           <Panel
             title={<Text content={item.menuItem} />}
             key={`tab_key${item.id}`}

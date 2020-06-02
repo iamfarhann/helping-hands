@@ -293,8 +293,8 @@ export const DonateButton = styled(AnchorLink)`
   font-weight: 700;
   border-radius: 10px;
   cursor: pointer;
-  color: ${themeGet('colors.heading', '#060F1E')};
-  background-color: ${themeGet('colors.primary', '#FCF22B')};
+  color: #ffffff;
+  background-color: #c3eee4;
   position: relative;
   overflow: hidden;
   z-index: 1;

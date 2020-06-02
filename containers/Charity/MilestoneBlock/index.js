@@ -1,15 +1,15 @@
-import React from 'react';
-import Link from 'next/link';
-import Text from 'common/src/components/Text';
-import Heading from 'common/src/components/Heading';
-import Container from 'common/src/components/UI/Container';
+import React from "react";
+import Link from "next/link";
+import Text from "../../../common/src/components/Text";
+import Heading from "../../../common/src/components/Heading";
+import Container from "../../../common/src/components/UI/Container";
 import BlockWrapper, {
   MilestoneCard,
   CounterWrapper,
   CounterItem,
-} from './milestoneBlock.style';
+} from "./milestoneBlock.style";
 
-import { milestoneData } from 'common/src/data/Charity';
+import { milestoneData } from "../../../common/src/data/Charity";
 
 const MilestoneBlock = () => {
   const { title, amount, text, counterItems } = milestoneData;
@@ -29,7 +29,7 @@ const MilestoneBlock = () => {
         </MilestoneCard>
       </BlockWrapper>
       <CounterWrapper>
-        {counterItems.map(item => (
+        {counterItems.map((item) => (
           <CounterItem key={`counter_key${item.id}`}>
             <Heading as="h3" content={item.amount} />
             <Text content={item.title} />

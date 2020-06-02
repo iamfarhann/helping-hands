@@ -1,17 +1,17 @@
-import React from 'react';
-import Link from 'next/link';
-import Container from 'common/src/components/UI/Container';
-import Heading from 'common/src/components/Heading';
-import BlogPost from 'common/src/components/BlogPost';
+import React from "react";
+import Link from "next/link";
+import Container from "../../../common/src/components/UI/Container";
+import Heading from "../../../common/src/components/Heading";
+import BlogPost from "../../../common/src/components/BlogPost";
 import SectionWrapper, {
   SectionHeader,
   TitleArea,
   LinkArea,
   Text,
   PostArea,
-} from './blogSection.style';
+} from "./blogSection.style";
 
-import { posts } from 'common/src/data/Charity';
+import { posts } from "../../../common/src/data/Charity";
 
 const BlogSection = () => {
   return (
@@ -38,7 +38,7 @@ const BlogSection = () => {
           </LinkArea>
         </SectionHeader>
         <PostArea>
-          {posts.map(item => (
+          {posts.map((item) => (
             <BlogPost
               key={`blog__post-key${item.id}`}
               thumbUrl={item.thumbUrl}

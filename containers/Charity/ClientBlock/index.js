@@ -1,15 +1,15 @@
-import React from 'react';
-import Logo from 'common/src/components/UIElements/Logo';
-import SectionWrapper, { ImageSlider, ImageSlide } from './clientBlock.style';
+import React from "react";
+import Logo from "../../../common/src/components/UIElements/Logo";
+import SectionWrapper, { ImageSlider, ImageSlide } from "./clientBlock.style";
 
-import { clients } from 'common/src/data/Charity';
+import { clients } from "../../../common/src/data/Charity";
 
 const ClientBlock = () => {
   return (
     <SectionWrapper>
       <ImageSlider>
         <ImageSlide>
-          {clients.map(item => (
+          {clients.map((item) => (
             <Logo
               key={`slide1__key${item.id}`}
               href={item.link}
@@ -19,7 +19,7 @@ const ClientBlock = () => {
           ))}
         </ImageSlide>
         <ImageSlide>
-          {clients.map(item => (
+          {clients.map((item) => (
             <Logo
               key={`slide2__key${item.id}`}
               href={item.link}

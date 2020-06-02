@@ -16,7 +16,7 @@ const NavbarWrapper = styled.nav`
   }
 
   .logo {
-    max-width: 107px;
+    max-width: 150px;
     width: 100%;
   }
 `;

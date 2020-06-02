@@ -1,12 +1,13 @@
-import React from 'react';
-import Link from 'next/link';
-import Container from 'common/src/components/UI/Container';
-import Heading from 'common/src/components/Heading';
-import Text from 'common/src/components/Text';
-import Image from 'common/src/components/Image';
-import { Icon } from 'react-icons-kit';
-import { twitter } from 'react-icons-kit/fa/twitter';
-import { facebookSquare } from 'react-icons-kit/fa/facebookSquare';
+import React from "react";
+import Link from "next/link";
+import Container from "../../../common/src/components/UI/Container";
+import Heading from "../../../common/src/components/Heading";
+import Button from "../../../common/src/components/Button";
+import Text from "../../../common/src/components/Text";
+import Image from "../../../common/src/components/Image";
+import { Icon } from "react-icons-kit";
+import { twitter } from "react-icons-kit/fa/twitter";
+import { facebookSquare } from "react-icons-kit/fa/facebookSquare";
 import SectionWrapper, {
   SectionHeader,
   ContentArea,
@@ -20,10 +21,7 @@ import SectionWrapper, {
   DonateButton,
   ShareList,
   Item,
-} from './fundraiserSection.style';
-
-import fundraisersImage from 'common/src/assets/image/charity/fundraisers.png';
-import heartImage from 'common/src/assets/image/charity/heart.svg';
+} from "./fundraiserSection.style";
 
 const FundraiserSection = () => {
   return (
@@ -35,7 +33,7 @@ const FundraiserSection = () => {
         </SectionHeader>
         <ContentArea>
           <ImageWrapper>
-            <Image src={fundraisersImage} alt="Charity" />
+            <Image src="/image/charity/fundraisers.png" alt="Charity" />
           </ImageWrapper>
           <TextWrapper>
             <TextAndLink>
@@ -61,10 +59,31 @@ const FundraiserSection = () => {
               </BarArea>
               <Heading as="h5" content="Raised by 10 people in 1 month" />
             </DonationProgressbar>
+
             <ShareArea>
-              <DonateButton href="#donate" offset={81}>
-                DONATE NOW <Image src={heartImage} alt="Charity Landing" />
-              </DonateButton>
+              <a href="/project">
+                <Button
+                  title="DONATE NOW"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minWidth: "230px",
+                    height: "65px",
+                    border: "0",
+                    fontSize: "15px",
+                    fontWeight: "700",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    color: "#060F1E",
+                    backgroundColor: "#C3EEE4",
+                    position: "relative",
+                    overflow: "hidden",
+                    zIndex: "1",
+                  }}
+                />
+              </a>
+              {/* <Image src="/image/charity/heart.svg" alt="Charity Landing" /> */}
               <ShareList>
                 <Item>Share on</Item>
                 <Item>
