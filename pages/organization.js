@@ -52,6 +52,8 @@ import SectionWrapper, {
   ShareList,
   Item,
 } from "../containers/Charity/FundraiserSection/fundraiserSection.style";
+import thumbImage1 from "../public/image/charity/organization.jpg";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -104,7 +106,8 @@ export default function Organization() {
                 container
                 md={12}
                 style={{
-                  backgroundImage: "/image/charity/organization.jpg",
+                  backgroundImage: `url(${thumbImage1})`,
+
                   backgroundSize: "cover",
 
                   minHeight: "525px",

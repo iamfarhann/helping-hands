@@ -21,33 +21,33 @@
 /* ------------------------------------ */
 export const menuItems = [
   {
-    label: "Feature",
+    label: "Categories",
     path: "#feature",
     offset: "81",
   },
   {
-    label: "Our Branch",
+    label: "Top Organizations",
     path: "#branch",
     offset: "100",
   },
   {
-    label: "How We Works",
-    path: "#work",
-    offset: "81",
-  },
-  {
-    label: "Our Milestone",
-    path: "#milestone",
-    offset: "81",
-  },
-  {
-    label: "Donate Us",
-    path: "#donate",
-    offset: "81",
-  },
-  {
     label: "Fundraisers",
     path: "#fundraisers",
+    offset: "81",
+  },
+  {
+    label: "Micro Donations",
+    path: "#socialFundraising",
+    offset: "81",
+  },
+  {
+    label: "Scattered Data",
+    path: "#socialFundraising",
+    offset: "81",
+  },
+  {
+    label: "Portfolios",
+    path: "#socialFundraising",
     offset: "81",
   },
   {
@@ -68,7 +68,7 @@ export const menuItems = [
 export const bannerSlides = [
   {
     id: 1,
-    thumb_url: "/image/charity/banner/slide1.png",
+    thumb_url: "/image/charity/banner/slide3.png",
   },
   {
     id: 2,
@@ -95,26 +95,26 @@ export const bannerSlides = [
 // import featureIcon6 from "/image/charity/feature/6.svg";
 
 export const featureData = {
-  title: "They Care, Do You?",
-  slogan: "Here is how you can get involved and make a change.",
+  title: "  Want to make a difference?  ",
+  slogan: "You can choose to donate for a category that you prefer",
   features: [
     {
       id: 1,
       icon: "/image/charity/feature/1.svg",
-      title: "Sponsor A Water",
+      title: "Health ",
       description:
         "If you want to change the world, one wish at a time, help kids",
     },
     {
       id: 2,
       icon: "/image/charity/feature/2.svg",
-      title: "Pledge For A Cause",
+      title: "Food      ",
       description: "If you want to change the world, one wish at a time.",
     },
     {
       id: 3,
       icon: "/image/charity/feature/3.svg",
-      title: "Buy a Coffee",
+      title: " Orphans      ",
       description: "If you want to change the world, one wish at a time.",
     },
     {
@@ -127,13 +127,14 @@ export const featureData = {
     {
       id: 5,
       icon: "/image/charity/feature/5.svg",
-      title: "Partner With Us",
+      title: "Animals      ",
+
       description: "If you want to change the world, one wish at.",
     },
     {
       id: 6,
       icon: "/image/charity/feature/6.svg",
-      title: "Help us for Educational ",
+      title: " Education ",
       description: "If you want to change the world, one wish at a time.",
     },
   ],
@@ -152,13 +153,11 @@ export const featureData = {
 export const branchData = [
   {
     id: 1,
-    menuItem: "Afganistan",
-    image: "/image/charity/branch/image1.png",
-    slogan: "WITH YOUR LOVE",
-    title: `We’ve funded <strong>12,925</strong> 
-    water projects for 
-    <strong>5.2 million</strong> people
-    around the world.`,
+    menuItem: "Akhuwat",
+    image: "/image/charity/branch/image1.jpg",
+    slogan: "TOP ORGANIZATIONS",
+    title: `With transparency score of <strong>75%</strong> 
+    Akhuwat is one of the best organization.`,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     linkUrl: "#1",
@@ -166,9 +165,9 @@ export const branchData = [
   },
   {
     id: 2,
-    menuItem: "ukraine",
-    image: "/image/charity/branch/image2.png",
-    slogan: "WITH YOUR CARE",
+    menuItem: "Shaukat Khanum",
+    image: "/image/charity/branch/image2.jpg",
+    slogan: "TOP ORGANIZATIONS",
     title: `We’ve funded <strong>19,571</strong> 
     water projects for 
     <strong>6.7 million</strong> people
@@ -180,9 +179,9 @@ export const branchData = [
   },
   {
     id: 3,
-    menuItem: "Africa",
-    image: "/image/charity/branch/image.png",
-    slogan: "WITH YOUR HELP",
+    menuItem: "Tahreek-e-ilm ",
+    image: "/image/charity/branch/image3.jpg",
+    slogan: "TOP ORGANIZATIONS",
     title: `We’ve funded <strong>29,725</strong> 
     water projects for 
     <strong>8.4 million</strong> people
@@ -194,9 +193,9 @@ export const branchData = [
   },
   {
     id: 4,
-    menuItem: "India",
-    image: "/image/charity/branch/image3.png",
-    slogan: "WITH YOUR LOVE",
+    menuItem: "Alkhidmat Foundation",
+    image: "/image/charity/branch/image4.jpg",
+    slogan: "TOP ORGANIZATIONS",
     title: `We’ve funded <strong>10,792</strong> 
     water projects for 
     <strong>4.9 million</strong> people
@@ -208,8 +207,8 @@ export const branchData = [
   },
   {
     id: 5,
-    menuItem: "South Sudan",
-    image: "/image/charity/branch/image4.png",
+    menuItem: "Meem Foundation",
+    image: "/image/charity/branch/image5.jpg",
     slogan: "WITH YOUR CARE",
     title: `We’ve funded <strong>10,071</strong> 
     water projects for 
@@ -222,9 +221,9 @@ export const branchData = [
   },
   {
     id: 6,
-    menuItem: "Bhutan",
-    image: "/image/charity/branch/image5.png",
-    slogan: "WITH YOUR HELP",
+    menuItem: "Edhi Foundation",
+    image: "/image/charity/branch/image6.jpg",
+    slogan: "TOP ORGANIZATIONS",
     title: `We’ve funded <strong>19,792</strong> 
     water projects for 
     <strong>7.9 million</strong> people
