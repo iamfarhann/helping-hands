@@ -52,7 +52,7 @@ import SectionWrapper, {
   ShareList,
   Item,
 } from "../containers/Charity/FundraiserSection/fundraiserSection.style";
-import thumbImage1 from "../public/image/charity/organization.jpg";
+const thumbImage1 = "/image/charity/organization.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +99,10 @@ export default function Organization() {
           <DrawerProvider>
             <DrawerSection />
           </DrawerProvider>
-          <Container maxWidth="xl" style={{ minHeight: "100vh", padding: 0 }}>
+          <Container
+            maxWidth="xl"
+            style={{ minHeight: "100vh", background: "#F2F2F2", padding: 0 }}
+          >
             <Grid container style={{ paddingLeft: 0 }}>
               <Grid
                 item
@@ -113,132 +116,134 @@ export default function Organization() {
                   minHeight: "525px",
                 }}
               ></Grid>
-
-              <Grid item md={4}>
-                <Box width={1} px={20} my={-10}>
-                  {" "}
-                  <img
-                    src="http://lorempixel.com/175/175"
-                    height="150px"
-                    width="175px"
-                    style={{
-                      borderRadius: "4px",
-                      objectFit: "cover",
-                      cursor: "pointer",
-                    }}
-                  />
-                </Box>
-              </Grid>
             </Grid>
-            <Grid
-              container
-              style={{ background: "#F2F2F2", paddingTop: "50px" }}
-              spacing={2}
-            >
+
+            <Grid item md={4}>
+              <Box width={1} px={20} my={-10}>
+                {" "}
+                <img
+                  src="http://lorempixel.com/175/175"
+                  height="150px"
+                  width="175px"
+                  style={{
+                    borderRadius: "4px",
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
+                />
+              </Box>
+            </Grid>
+            <Container maxWidth="lg">
               <Grid
-                item
-                md={8}
-                style={{ marginLeft: "160px", marginTop: "50px" }}
+                container
+                style={{ background: "#F2F2F2", paddingTop: "50px" }}
+                spacing={2}
               >
-                <Heading
-                  as="h1"
-                  style={{ marginBottom: 10 }}
-                  content="Akhuwat"
-                />
-                <Text
-                  content="Akhuwat is world's largest interest free microfinance
-                  organization which envisions a poverty free society built on
-                  the principles of compassion."
-                />
-              </Grid>
-              <Grid container style={{ marginLeft: "165px" }}>
-                <Grid item md={7} style={{ display: "flex" }}>
-                  <a href="/project">
-                    <Button
-                      title="Add to Protfolio"
-                      variant="textButton"
-                      style={{
-                        marginTop: "0px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: "200px",
-                        height: "auto",
-                        border: "0",
-                        fontSize: "15px",
-                        fontWeight: "700",
-                        borderRadius: "10px",
-                        cursor: "pointer",
-                        color: "#FFFFFF",
-                        backgroundColor: "#05B890",
-                        position: "relative",
-                        overflow: "hidden",
-                        zIndex: "1",
-                      }}
-                    />
-                  </a>
-                  <a href="/project">
-                    <Button
-                      title="Contact"
-                      variant="outlined"
-                      style={{
-                        marginTop: "0px",
-
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: "200px",
-                        height: "auto",
-                        border: "1",
-                        borderColor: "#3E2672",
-                        fontSize: "15px",
-                        fontWeight: "700",
-                        borderRadius: "10px",
-                        cursor: "pointer",
-                        color: "#060F1E",
-
-                        position: "relative",
-                        overflow: "hidden",
-                        zIndex: "1",
-                      }}
-                    />
-                  </a>
-                </Grid>
                 <Grid
                   item
-                  md={5}
-                  style={{ paddingLeft: "50px", paddingRight: "-20px" }}
+                  md={8}
+                  style={{ marginLeft: "60px", marginTop: "50px" }}
                 >
-                  <DonationProgressbar
-                    style={{
-                      width: "115%",
-                      marginTop: "10px",
-                      marginBottom: "0px",
-                    }}
+                  <Heading
+                    as="h1"
+                    style={{ marginBottom: 10 }}
+                    content="Akhuwat"
+                  />
+                  <Text
+                    content="Akhuwat is world's largest interest free microfinance
+                  organization which envisions a poverty free society built on
+                  the principles of compassion."
+                  />
+                </Grid>
+                <Grid container style={{ marginLeft: "65px" }}>
+                  <Grid item md={7} style={{ display: "flex" }}>
+                    <a href="/project">
+                      <Button
+                        title="Add to Protfolio"
+                        variant="textButton"
+                        style={{
+                          marginTop: "0px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          minWidth: "200px",
+                          height: "auto",
+                          border: "0",
+                          fontSize: "15px",
+                          fontWeight: "700",
+                          borderRadius: "10px",
+                          cursor: "pointer",
+                          color: "#FFFFFF",
+                          backgroundColor: "#05B890",
+                          position: "relative",
+                          overflow: "hidden",
+                          zIndex: "1",
+                        }}
+                      />
+                    </a>
+                    <a href="/project">
+                      <Button
+                        title="Contact"
+                        variant="outlined"
+                        style={{
+                          marginTop: "0px",
+
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          minWidth: "200px",
+                          height: "auto",
+                          border: "1",
+                          borderColor: "#3E2672",
+                          fontSize: "15px",
+                          fontWeight: "700",
+                          borderRadius: "10px",
+                          cursor: "pointer",
+                          color: "#060F1E",
+
+                          position: "relative",
+                          overflow: "hidden",
+                          zIndex: "1",
+                        }}
+                      />
+                    </a>
+                  </Grid>
+                  <Grid
+                    item
+                    md={5}
+                    style={{ paddingLeft: "50px", paddingRight: "-20px" }}
                   >
-                    <BarArea style={{ margin: "0px", padding: "0px" }}>
-                      <CurrentStatus style={{ margin: "0px" }}>
-                        <strong>86%</strong> on transparency scale
-                      </CurrentStatus>
-                      <Text content="" />
-                    </BarArea>
-                    {/* <Heading
+                    <DonationProgressbar
+                      style={{
+                        width: "115%",
+                        marginTop: "10px",
+                        marginBottom: "0px",
+                      }}
+                    >
+                      <BarArea style={{ margin: "0px", padding: "0px" }}>
+                        <CurrentStatus style={{ margin: "0px" }}>
+                          <strong>86%</strong> on transparency scale
+                        </CurrentStatus>
+                        <Text content="" />
+                      </BarArea>
+                      {/* <Heading
                       as="h5"
                       content="Raised by 10 people in 1 month"
                       style={{ fontSize: '18px' }}
                     /> */}
-                  </DonationProgressbar>
+                    </DonationProgressbar>
+                  </Grid>
+                </Grid>
+
+                <Grid container item md={12} style={{ marginTop: "20px" }}>
+                  <Box>
+                    <Paper>
+                      <ScrollableTabsButtonForce />
+                    </Paper>
+                  </Box>
                 </Grid>
               </Grid>
-
-              <Grid container item md={12} style={{ marginTop: "20px" }}>
-                <Box px={20}>
-                  <Paper>
-                    <ScrollableTabsButtonForce />
-                  </Paper>
-                </Box>
-              </Grid>
-            </Grid>
+            </Container>
             <Grid
               item
               container

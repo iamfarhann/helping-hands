@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useState } from "react";
 import Image from "../common/src/components/Image";
-import heartImage from "../common/src/assets/image/charity/heart-alt.svg";
+const heartImage = "/image/charity/heart-alt.svg";
 import Head from "next/head";
 import Sticky from "react-stickynode";
 import { ThemeProvider } from "styled-components";

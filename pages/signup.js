@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useState } from "react";
 import Image from "../common/src/components/Image";
-import heartImage from "../common/src/assets/image/charity/heart-alt.svg";
+const heartImage = "/image/charity/heart-alt.svg";
 import Head from "next/head";
 import Sticky from "react-stickynode";
 import { ThemeProvider } from "styled-components";
@@ -47,6 +47,12 @@ import SectionWrapper, {
   DonateButton,
 } from "../containers/Charity/donateSection/donateSection.style";
 import { addCredits, currencyOptions } from "../common/src/data/Charity";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { CREATE_DONOR, REGISTER } from "../lib/mutations";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -59,12 +65,108 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-export default () => {
+export default function signup() {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "usd",
-    policy: "oneTime",
+  const [formValues, setFormValues] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState(null);
+
+  const [registerUser] = useMutation(REGISTER, {
+    onCompleted: (data) => {
+      console.log(data);
+
+      setLoginLoading(false);
+
+      // dispatch({
+      //     type:"LOGIN",
+      //     payload:{}
+      // })
+    },
+    onError: ({ graphQLErrors, networkError }) => {
+      console.log(networkError);
+      console.log("Register Error");
+      // console.log(networkError);
+      // console.log(graphQLErrors);
+      // .result.errors[0].extensions.data[0].messages[0].id == "Auth.form.error.invalid"
+      if (networkError) {
+        setLoginError("User already exists");
+      }
+      setLoginLoading(false);
+    },
+  });
+
+  const [createDonor] = useMutation(CREATE_DONOR, {
+    onCompleted: (data) => {
+      console.log(data, "donor");
+      registerUser({
+        variables: {
+          fields: {
+            donor: data.createDonor.donor.id,
+            username: formValues.email.split("@")[0],
+            email: formValues.email,
+            password: formValues.password,
+            confirmed: true,
+            donorAccount: true,
+          },
+        },
+      });
+    },
+    onError: ({ networkError, graphQLErrors }) => {
+      console.log(networkError.result, graphQLErrors, "Donor Signup");
+      setLoginError("Sorry, an error occured, try again");
+      setLoginLoading(false);
+    },
+  });
+  const schemas = [
+    {
+      email: Yup.string()
+        .email("Email not valid")
+        .required("Please Enter Your Email"),
+      password: Yup.string().required("Please Enter Password"),
+      fullName: Yup.string().required("Please Enter Full Name"),
+      mobileNumber: Yup.string().required("Please Enter Your Mobile Number"),
+      cnic: Yup.string().required("Please Enter Your CNIC Number"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Pleaser confirm password"),
+    },
+  ];
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      fullName: "",
+      email: "",
+      mobileNumber: "",
+      cnic: "",
+      password: "",
+      confirmPassword: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      setLoginLoading(true);
+      setLoginError(null);
+      setFormValues(values);
+      createDonor({
+        variables: {
+          fields: {
+            data: {
+              fullName: values.fullName,
+              cnic: values.cnic,
+              mobileNumber: values.mobileNumber,
+            },
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape(schemas[0]),
   });
 
   const handleFormData = (value, name) => {
@@ -130,30 +232,25 @@ export default () => {
                     <Grid container>
                       <Grid item md={5} style={{ marginTop: "30px" }}>
                         <Heading
-                          content="User Name"
+                          content="Full Name"
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
+                          name="fullName"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.fullName && touched.fullName}
+                          helperText={
+                            errors.fullName && touched.fullName
+                              ? errors.fullName
+                              : null
+                          }
                           label=""
                           variant="outlined"
                           size="small"
                           style={{ color: "#3E2672" }}
-                          fullWidth
-                        />
-                        <Heading
-                          content="First Name"
-                          as="h4"
-                          style={{ marginTop: "1rem" }}
-                        />{" "}
-                        {/* FIXME: Color of text fields */}
-                        <TextField
-                          id="outlined-basic"
-                          label=""
-                          variant="outlined"
-                          size="small"
                           fullWidth
                         />
                         <Heading
@@ -164,6 +261,15 @@ export default () => {
                         {/* FIXME: Color of text fields */}
                         <TextField
                           id="outlined-basic"
+                          name="mobileNumber"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.mobileNumber && touched.mobileNumber}
+                          helperText={
+                            errors.mobileNumber && touched.mobileNumber
+                              ? errors.mobileNumber
+                              : null
+                          }
                           label=""
                           variant="outlined"
                           size="small"
@@ -176,12 +282,21 @@ export default () => {
                           style={{ marginTop: "1rem" }}
                         />{" "}
                         {/* FIXME: Color of text fields */}
-                        <PasswordField
-                          hintText="At least 8 characters"
-                          floatingLabelText="Enter your password"
-                          errorText="Your password is too short"
+                        <TextField
+                          label=""
+                          name="password"
+                          onChange={handleChange}
+                          type="password"
+                          value={values.password}
+                          onBlur={handleBlur}
                           fullWidth
                           variant="outlined"
+                          error={errors.password && touched.password}
+                          helperText={
+                            errors.password && touched.password
+                              ? errors.password
+                              : null
+                          }
                         />
                       </Grid>
                       <Grid item md={1} />
@@ -195,22 +310,17 @@ export default () => {
                         <TextField
                           id="outlined-basic"
                           label=""
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.email && touched.email}
+                          helperText={
+                            errors.email && touched.email ? errors.email : null
+                          }
                           variant="outlined"
                           size="small"
                           style={{ color: "#3E2672" }}
-                          fullWidth
-                        />
-                        <Heading
-                          content="Last Name"
-                          as="h4"
-                          style={{ marginTop: "1rem" }}
-                        />{" "}
-                        {/* FIXME: Color of text fields */}
-                        <TextField
-                          id="outlined-basic"
-                          label=""
-                          variant="outlined"
-                          size="small"
                           fullWidth
                         />
                         <Heading
@@ -221,11 +331,42 @@ export default () => {
                         {/* FIXME: Color of text fields */}
                         <TextField
                           id="outlined-basic"
+                          name="cnic"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.cnic && touched.cnic}
+                          helperText={
+                            errors.cnic && touched.cnic ? errors.cnic : null
+                          }
                           label=""
                           variant="outlined"
                           size="small"
                           style={{ color: "#05B890" }}
                           fullWidth
+                        />
+                        <Heading
+                          content="Confirm Password"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />{" "}
+                        {/* FIXME: Color of text fields */}
+                        <TextField
+                          label=""
+                          name="confirmPassword"
+                          onChange={handleChange}
+                          type="password"
+                          value={values.confirmPassword}
+                          onBlur={handleBlur}
+                          fullWidth
+                          variant="outlined"
+                          error={
+                            errors.confirmPassword && touched.confirmPassword
+                          }
+                          helperText={
+                            errors.confirmPassword && touched.confirmPassword
+                              ? errors.confirmPassword
+                              : null
+                          }
                         />
                       </Grid>
 
@@ -235,32 +376,31 @@ export default () => {
                         md={12}
                         style={{ alignContent: "center" }}
                       >
-                        <a href="/account">
-                          <Button
-                            title="Create Account"
-                            variant="textButton"
-                            style={{
-                              marginTop: "20px",
-                              marginLeft: "230px",
+                        <Button
+                          title="Create Account"
+                          variant="textButton"
+                          onClick={handleSubmit}
+                          style={{
+                            marginTop: "20px",
+                            marginLeft: "230px",
 
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              minWidth: "200px",
-                              height: "auto",
-                              border: "0",
-                              fontSize: "15px",
-                              fontWeight: "700",
-                              borderRadius: "10px",
-                              cursor: "pointer",
-                              color: "#FFFFFF",
-                              backgroundColor: "#05B890",
-                              position: "relative",
-                              overflow: "hidden",
-                              zIndex: "1",
-                            }}
-                          />
-                        </a>
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minWidth: "200px",
+                            height: "auto",
+                            border: "0",
+                            fontSize: "15px",
+                            fontWeight: "700",
+                            borderRadius: "10px",
+                            cursor: "pointer",
+                            color: "#FFFFFF",
+                            backgroundColor: "#05B890",
+                            position: "relative",
+                            overflow: "hidden",
+                            zIndex: "1",
+                          }}
+                        />
                       </Grid>
                       <Grid container item md={12}>
                         <a href="/signup_o">Signup as organization?</a>
@@ -277,4 +417,4 @@ export default () => {
       </Fragment>
     </ThemeProvider>
   );
-};
+}

@@ -168,10 +168,8 @@ export const branchData = [
     menuItem: "Shaukat Khanum",
     image: "/image/charity/branch/image2.jpg",
     slogan: "TOP ORGANIZATIONS",
-    title: `We’ve funded <strong>19,571</strong> 
-    water projects for 
-    <strong>6.7 million</strong> people
-    around the world.`,
+    title: `With transparency score of <strong>75%</strong> 
+    Shaukat Khanum is one of the best organization.`,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     linkUrl: "#1",
@@ -182,12 +180,10 @@ export const branchData = [
     menuItem: "Tahreek-e-ilm ",
     image: "/image/charity/branch/image3.jpg",
     slogan: "TOP ORGANIZATIONS",
-    title: `We’ve funded <strong>29,725</strong> 
-    water projects for 
-    <strong>8.4 million</strong> people
-    around the world.`,
+    title: `With transparency score of <strong>75%</strong> 
+    Tahreek-e-ilm is one of the best organization. `,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Despite being a small organization we’ve funded 29,725 water projects for 8.4 million people around the world.",
     linkUrl: "#1",
     linkText: "SEE MORE OF OUR IMPACT",
   },

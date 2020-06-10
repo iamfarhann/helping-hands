@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { themeGet } from "styled-system";
-import patter1 from "../../../common/src/assets/image/charity/branch/highlight-pattern.svg";
-import patter2 from "../../../common/src/assets/image/charity/branch/highlight-pattern2.svg";
+const patter1 = "/image/charity/branch/highlight-pattern.svg";
+const patter2 = "/image/charity/branch/highlight-pattern2.svg";
 
 const SectionWrapper = styled.section`
   width: 100%;

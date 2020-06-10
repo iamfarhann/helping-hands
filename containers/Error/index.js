@@ -7,7 +7,6 @@ import Text from "../../common/src/components/Text";
 import Heading from "../../common/src/components/Heading";
 import Image from "../../common/src/components/Image";
 import Button from "../../common/src/components/Button";
-import ErrorImage from "../../common/src/assets/image/404.svg";
 import { home } from "react-icons-kit/entypo/home";
 import { ccw } from "react-icons-kit/entypo/ccw";
 import { ErrorWrapper, ErrorConatent, ButtonWrapper } from "./error.style";
@@ -20,7 +19,7 @@ const ErrorSec = ({ imageWrapper, title, text, reloadButton, homeButton }) => {
     <ErrorWrapper>
       <ErrorConatent>
         <Box {...imageWrapper} className="image-wrapper">
-          <Image src={ErrorImage} alt="404" />
+          <Image src="/image/404.svg" alt="404" />
         </Box>
         <Heading {...title} content="Page not found!" />
         <Text

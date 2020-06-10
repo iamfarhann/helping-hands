@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import './flaticon.css';
+import { createGlobalStyle } from "styled-components";
+//import './flaticon.css';
 
 export const ResetCSS = createGlobalStyle`
   ::selection {

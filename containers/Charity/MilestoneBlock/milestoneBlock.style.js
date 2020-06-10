@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { themeGet } from "styled-system";
-import bgImage from "../../../common/src/assets/image/charity/milestone-bg.png";
+const bgImage = "/image/charity/milestone-bg.png";
 
 const BlockWrapper = styled.div`
   width: 100%;

@@ -32,7 +32,7 @@ export default () => {
       <Fragment>
         {/* Start charity head section */}
         <Head>
-          <title>Charity | A react next landing page</title>
+          <title>Esaar | A micro donation platform</title>
           <meta name="Description" content="React next landing page" />
           <meta name="theme-color" content="#FCF22B" />
           <meta
