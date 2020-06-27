@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { useState } from "react";
-import Image from "../common/src/components/Image";
+import Text from "../common/src/components/Text";
+import { useRouter } from "next/router";
 const heartImage = "/image/charity/heart-alt.svg";
 import Head from "next/head";
 import Sticky from "react-stickynode";
@@ -23,7 +24,9 @@ import {
   Grid,
   Paper,
   Divider,
+  CircularProgress,
 } from "@material-ui/core";
+
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -66,6 +69,7 @@ function ListItemLink(props) {
 }
 
 export default function signup() {
+  const router = useRouter();
   const classes = useStyles();
   const [formValues, setFormValues] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
@@ -74,8 +78,8 @@ export default function signup() {
   const [registerUser] = useMutation(REGISTER, {
     onCompleted: (data) => {
       console.log(data);
-
-      setLoginLoading(false);
+      router.push("/signin");
+      //setLoginLoading(false);
 
       // dispatch({
       //     type:"LOGIN",
@@ -83,14 +87,14 @@ export default function signup() {
       // })
     },
     onError: ({ graphQLErrors, networkError }) => {
-      console.log(networkError);
+      // console.log(networkError.result, graphQLErrors);
       console.log("Register Error");
       // console.log(networkError);
       // console.log(graphQLErrors);
       // .result.errors[0].extensions.data[0].messages[0].id == "Auth.form.error.invalid"
-      if (networkError) {
-        setLoginError("User already exists");
-      }
+      // if (networkError) {
+      setLoginError("User already exists");
+
       setLoginLoading(false);
     },
   });
@@ -101,18 +105,20 @@ export default function signup() {
       registerUser({
         variables: {
           fields: {
-            donor: data.createDonor.donor.id,
-            username: formValues.email.split("@")[0],
-            email: formValues.email,
-            password: formValues.password,
-            confirmed: true,
-            donorAccount: true,
+            data: {
+              donor: data.createDonor.donor.id,
+              username: formValues.email.split("@")[0],
+              email: formValues.email,
+              password: formValues.password,
+              confirmed: true,
+              isDonor: true,
+            },
           },
         },
       });
     },
     onError: ({ networkError, graphQLErrors }) => {
-      console.log(networkError.result, graphQLErrors, "Donor Signup");
+      // console.log(networkError.result, graphQLErrors, "Donor Signup");
       setLoginError("Sorry, an error occured, try again");
       setLoginLoading(false);
     },
@@ -248,7 +254,6 @@ export default function signup() {
                               : null
                           }
                           label=""
-                          variant="outlined"
                           size="small"
                           style={{ color: "#3E2672" }}
                           fullWidth
@@ -271,7 +276,6 @@ export default function signup() {
                               : null
                           }
                           label=""
-                          variant="outlined"
                           size="small"
                           style={{ color: "#05B890" }}
                           fullWidth
@@ -290,7 +294,6 @@ export default function signup() {
                           value={values.password}
                           onBlur={handleBlur}
                           fullWidth
-                          variant="outlined"
                           error={errors.password && touched.password}
                           helperText={
                             errors.password && touched.password
@@ -318,7 +321,6 @@ export default function signup() {
                           helperText={
                             errors.email && touched.email ? errors.email : null
                           }
-                          variant="outlined"
                           size="small"
                           style={{ color: "#3E2672" }}
                           fullWidth
@@ -339,7 +341,6 @@ export default function signup() {
                             errors.cnic && touched.cnic ? errors.cnic : null
                           }
                           label=""
-                          variant="outlined"
                           size="small"
                           style={{ color: "#05B890" }}
                           fullWidth
@@ -358,7 +359,6 @@ export default function signup() {
                           value={values.confirmPassword}
                           onBlur={handleBlur}
                           fullWidth
-                          variant="outlined"
                           error={
                             errors.confirmPassword && touched.confirmPassword
                           }
@@ -374,31 +374,35 @@ export default function signup() {
                         container
                         item
                         md={12}
-                        style={{ alignContent: "center" }}
+                        style={{
+                          alignContent: "center",
+                        }}
+                      >
+                        {loginError ? <Text content={loginError} /> : null}
+                      </Grid>
+
+                      <Grid
+                        container
+                        item
+                        md={12}
+                        style={{
+                          alignContent: "center",
+                        }}
                       >
                         <Button
                           title="Create Account"
-                          variant="textButton"
+                          variant="extendedFab"
                           onClick={handleSubmit}
+                          disabled={loginLoading}
+                          isLoading={loginLoading}
                           style={{
                             marginTop: "20px",
                             marginLeft: "230px",
-
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             minWidth: "200px",
                             height: "auto",
-                            border: "0",
-                            fontSize: "15px",
-                            fontWeight: "700",
-                            borderRadius: "10px",
-                            cursor: "pointer",
-                            color: "#FFFFFF",
-                            backgroundColor: "#05B890",
-                            position: "relative",
-                            overflow: "hidden",
-                            zIndex: "1",
                           }}
                         />
                       </Grid>
