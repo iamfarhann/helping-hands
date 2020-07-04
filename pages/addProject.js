@@ -34,6 +34,11 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import TextField from "@material-ui/core/TextField";
 
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { CREATE_PROJECT } from "../lib/mutations";
+
 import { DropzoneArea } from "material-ui-dropzone";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,34 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
-
 export default () => {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "Shaukat Khanum",
-    policy: "oneTime",
-  });
-
-  const handleFormData = (value, name) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
-  };
-
-  const handleDonation = (e) => {
-    e.preventDefault();
-    console.log("Donation form data: ", state);
-
-    setState({
-      ...state,
-      price: "",
-    });
-  };
 
   return (
     <ThemeProvider theme={charityTheme}>

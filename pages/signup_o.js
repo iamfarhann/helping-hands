@@ -25,76 +25,121 @@ import {
   Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
 import Button from "../common/src/components/Button";
 import Heading from "../common/src/components/Heading";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import TextField from "@material-ui/core/TextField";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import PasswordField from "material-ui-password-field";
-
 import { DropzoneArea } from "material-ui-dropzone";
 
-import InputGroup from "../common/src/components/InputGroup";
-import RadioGroup from "../common/src/components/RadioGroup";
-import SectionWrapper, {
-  ContentArea,
-  ButtonGroup,
-  DonationForm,
-  DonateButton,
-} from "../containers/Charity/donateSection/donateSection.style";
-import { addCredits, currencyOptions } from "../common/src/data/Charity";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
+import { useRouter } from "next/router";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { CREATE_ORGANIZATION, REGISTER } from "../lib/mutations";
 
 export default () => {
-  const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "usd",
-    policy: "oneTime",
+  const router = useRouter();
+  const [formValues, setFormValues] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState(null);
+
+  const [registerUser] = useMutation(REGISTER, {
+    onCompleted: (data) => {
+      console.log(data);
+      router.push("/signin");
+    },
+    onError: ({ graphQLErrors, networkError }) => {
+      console.log("Register Error");
+      setLoginError("User already exists");
+      setLoginLoading(false);
+    },
   });
 
-  const handleFormData = (value, name) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
-  };
-
-  const handleDonation = (e) => {
-    e.preventDefault();
-    console.log("Donation form data: ", state);
-
-    setState({
-      ...state,
-      price: "",
-    });
-  };
+  const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
+    onCompleted: (data) => {
+      console.log(data, "Organization");
+      registerUser({
+        variables: {
+          fields: {
+            data: {
+              organization: data.createOrganization.organization.id,
+              username: formValues.email.split("@")[0],
+              email: formValues.email,
+              password: formValues.password,
+              confirmed: true,
+              isDonor: false,
+            },
+          },
+        },
+      });
+    },
+    onError: ({ networkError, graphQLErrors }) => {
+      console.log(networkError.result, graphQLErrors, "Donor Signup");
+      setLoginError("Sorry, an error occured, try again");
+      setLoginLoading(false);
+    },
+  });
+  const schemas = [
+    {
+      email: Yup.string()
+        .email("Email not valid")
+        .required("Please Enter Your Email"),
+      orgName: Yup.string().required("Please Enter Organization Name"),
+      address: Yup.string().required("Please Enter Organization Address"),
+      regNumber: Yup.string().required("Please Enter Registration Number"),
+      password: Yup.string().required("Please Enter Password"),
+      fullName: Yup.string().required("Please Enter Full Name"),
+      mobileNumber: Yup.string().required("Please Enter Your Mobile Number"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Pleaser confirm password"),
+    },
+  ];
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      orgName: "",
+      regNumber: "",
+      address: "",
+      fullName: "",
+      email: "",
+      mobileNumber: "",
+      password: "",
+      confirmPassword: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      setLoginLoading(true);
+      setLoginError(null);
+      setFormValues(values);
+      createOrganization({
+        variables: {
+          fields: {
+            data: {
+              organizationName: values.orgName,
+              focalPerson: values.fullName,
+              registrationNumber: values.regNumber,
+              mobileNumber: values.mobileNumber,
+            },
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape(schemas[0]),
+  });
 
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
-        {/* Start charity head section */}
         <Head>
-          <title>Sign Up | Esaar</title>
+          <title>Register your organization | Esaar</title>
           <meta name="Description" content="React next landing page" />
           <meta name="theme-color" content="#FCF22B" />
           <meta
@@ -145,9 +190,17 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
+                          name="orgName"
                           id="outlined-basic"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.orgName && touched.orgName}
+                          helperText={
+                            errors.orgName && touched.orgName
+                              ? errors.orgName
+                              : null
+                          }
                           label=""
-                          variant="outlined"
                           size="small"
                           style={{ color: "#3E2672" }}
                           fullWidth
@@ -157,12 +210,19 @@ export default () => {
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
-                        {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
+                          name="fullName"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.fullName && touched.fullName}
+                          helperText={
+                            errors.fullName && touched.fullName
+                              ? errors.fullName
+                              : null
+                          }
                           label=""
-                          variant="outlined"
                           size="small"
+                          style={{ color: "#3E2672" }}
                           fullWidth
                         />
                         <Heading
@@ -170,13 +230,19 @@ export default () => {
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
-                        {/* FIXME: Color of text fields */}
                         <TextField
                           id="outlined-basic"
                           label=""
-                          variant="outlined"
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.email && touched.email}
+                          helperText={
+                            errors.email && touched.email ? errors.email : null
+                          }
                           size="small"
-                          style={{ color: "#05B890" }}
+                          style={{ color: "#3E2672" }}
                           fullWidth
                         />
                         <Heading
@@ -184,13 +250,20 @@ export default () => {
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
-                        {/* FIXME: Color of text fields */}
-                        <PasswordField
-                          hintText="At least 8 characters"
-                          floatingLabelText="Enter your password"
-                          errorText="Your password is too short"
+                        <TextField
+                          label=""
+                          name="password"
+                          onChange={handleChange}
+                          type="password"
+                          value={values.password}
+                          onBlur={handleBlur}
                           fullWidth
-                          variant="outlined"
+                          error={errors.password && touched.password}
+                          helperText={
+                            errors.password && touched.password
+                              ? errors.password
+                              : null
+                          }
                         />
                       </Grid>
                       <Grid item md={1} />
@@ -202,9 +275,17 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
+                          name="regNumber"
                           id="outlined-basic"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.regNumber && touched.regNumber}
+                          helperText={
+                            errors.regNumber && touched.regNumber
+                              ? errors.regNumber
+                              : null
+                          }
                           label=""
-                          variant="outlined"
                           size="small"
                           style={{ color: "#3E2672" }}
                           fullWidth
@@ -214,12 +295,20 @@ export default () => {
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
-                        {/* FIXME: Color of text fields */}
                         <TextField
                           id="outlined-basic"
+                          name="mobileNumber"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.mobileNumber && touched.mobileNumber}
+                          helperText={
+                            errors.mobileNumber && touched.mobileNumber
+                              ? errors.mobileNumber
+                              : null
+                          }
                           label=""
-                          variant="outlined"
                           size="small"
+                          style={{ color: "#05B890" }}
                           fullWidth
                         />
                         <Heading
@@ -229,14 +318,42 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
+                          name="address"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.address && touched.address}
+                          helperText={
+                            errors.address && touched.address
+                              ? errors.address
+                              : null
+                          }
                           label=""
-                          variant="outlined"
-                          multiline
-                          rows={6}
                           size="small"
-                          style={{ color: "#05B890" }}
+                          style={{ color: "#3E2672" }}
                           fullWidth
+                        />
+                        <Heading
+                          content="Confirm Password"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />{" "}
+                        {/* FIXME: Color of text fields */}
+                        <TextField
+                          label=""
+                          name="confirmPassword"
+                          onChange={handleChange}
+                          type="password"
+                          value={values.confirmPassword}
+                          onBlur={handleBlur}
+                          fullWidth
+                          error={
+                            errors.confirmPassword && touched.confirmPassword
+                          }
+                          helperText={
+                            errors.confirmPassword && touched.confirmPassword
+                              ? errors.confirmPassword
+                              : null
+                          }
                         />
                       </Grid>
                     </Grid>
@@ -267,34 +384,37 @@ export default () => {
                         container
                         item
                         md={12}
-                        style={{ alignContent: "center" }}
+                        style={{
+                          alignContent: "center",
+                        }}
                       >
-                        <a href="/account_o">
-                          <Button
-                            title="Create Account"
-                            variant="textButton"
-                            style={{
-                              marginTop: "20px",
-                              marginLeft: "250px",
+                        {loginError ? <Text content={loginError} /> : null}
+                      </Grid>
 
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              minWidth: "200px",
-                              height: "auto",
-                              border: "0",
-                              fontSize: "15px",
-                              fontWeight: "700",
-                              borderRadius: "10px",
-                              cursor: "pointer",
-                              color: "#FFFFFF",
-                              backgroundColor: "#05B890",
-                              position: "relative",
-                              overflow: "hidden",
-                              zIndex: "1",
-                            }}
-                          />
-                        </a>
+                      <Grid
+                        container
+                        item
+                        md={12}
+                        style={{
+                          alignContent: "center",
+                        }}
+                      >
+                        <Button
+                          title="Create Account"
+                          variant="extendedFab"
+                          onClick={handleSubmit}
+                          disabled={loginLoading}
+                          isLoading={loginLoading}
+                          style={{
+                            marginTop: "20px",
+                            marginLeft: "230px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minWidth: "200px",
+                            height: "auto",
+                          }}
+                        />
                       </Grid>
                     </Grid>
                   </Container>

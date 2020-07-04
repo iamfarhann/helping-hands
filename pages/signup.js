@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { useState } from "react";
 import Text from "../common/src/components/Text";
 import { useRouter } from "next/router";
-const heartImage = "/image/charity/heart-alt.svg";
 import Head from "next/head";
 import Sticky from "react-stickynode";
 import { ThemeProvider } from "styled-components";
@@ -17,42 +16,13 @@ import {
   CharityWrapper,
   ContentWrapper,
 } from "../containers/Charity/charity.style";
-import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  Divider,
-  CircularProgress,
-} from "@material-ui/core";
-
+import { Container, Grid, Paper, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import Button from "../common/src/components/Button";
 import Heading from "../common/src/components/Heading";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import TextField from "@material-ui/core/TextField";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import PasswordField from "material-ui-password-field";
-
-import { DropzoneArea } from "material-ui-dropzone";
-import InputGroup from "../common/src/components/InputGroup";
-import RadioGroup from "../common/src/components/RadioGroup";
-import SectionWrapper, {
-  ContentArea,
-  ButtonGroup,
-  DonationForm,
-  DonateButton,
-} from "../containers/Charity/donateSection/donateSection.style";
-import { addCredits, currencyOptions } from "../common/src/data/Charity";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CREATE_DONOR, REGISTER } from "../lib/mutations";
 
@@ -64,13 +34,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
-
 export default function signup() {
   const router = useRouter();
-  const classes = useStyles();
   const [formValues, setFormValues] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
@@ -79,22 +44,10 @@ export default function signup() {
     onCompleted: (data) => {
       console.log(data);
       router.push("/signin");
-      //setLoginLoading(false);
-
-      // dispatch({
-      //     type:"LOGIN",
-      //     payload:{}
-      // })
     },
     onError: ({ graphQLErrors, networkError }) => {
-      // console.log(networkError.result, graphQLErrors);
       console.log("Register Error");
-      // console.log(networkError);
-      // console.log(graphQLErrors);
-      // .result.errors[0].extensions.data[0].messages[0].id == "Auth.form.error.invalid"
-      // if (networkError) {
       setLoginError("User already exists");
-
       setLoginLoading(false);
     },
   });
@@ -242,7 +195,6 @@ export default function signup() {
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
-                        {/* FIXME: Color of text fields */}
                         <TextField
                           name="fullName"
                           onChange={handleChange}

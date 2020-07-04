@@ -1,118 +1,262 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React, { Fragment } from "react";
+import { useState } from "react";
+import Text from "../common/src/components/Text";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import Sticky from "react-stickynode";
+import { ThemeProvider } from "styled-components";
+import { charityTheme } from "../common/src/theme/charity";
+import { ResetCSS } from "../common/src/assets/css/style";
+import { DrawerProvider } from "../common/src/contexts/DrawerContext";
+import Navbar from "../containers/Charity/Navbar";
+import DrawerSection from "../containers/Charity/DrawerSection";
+import Footer from "../containers/Charity/Footer";
+import {
+  GlobalStyle,
+  CharityWrapper,
+  ContentWrapper,
+} from "../containers/Charity/charity.style";
+import { Container, Grid, Paper, Divider } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "../common/src/components/Button";
+import Heading from "../common/src/components/Heading";
+import TextField from "@material-ui/core/TextField";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { LOGIN, REGISTER } from "../lib/mutations";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
-export default function SignIn() {
-  const classes = useStyles();
+export default function signup() {
+  const router = useRouter();
+  const [formValues, setFormValues] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState(null);
+
+  const [registerUser] = useMutation(REGISTER, {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: ({ graphQLErrors, networkError }) => {
+      console.log("Register Error");
+      setLoginError("User already exists");
+      setLoginLoading(false);
+    },
+  });
+
+  const [login] = useMutation(LOGIN, {
+    onCompleted: (data) => {
+      console.log(data, "donor");
+      router.push("/");
+    },
+    onError: ({ networkError, graphQLErrors }) => {
+      // console.log(networkError.result, graphQLErrors, "Donor Signup");
+      setLoginError("Login Error! Please try again.");
+      setLoginLoading(false);
+    },
+  });
+  const schemas = [
+    {
+      email: Yup.string()
+        .email("Email not valid")
+        .required("Please Enter Your Email"),
+      password: Yup.string().required("Please Enter Password"),
+    },
+  ];
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      email: "",
+
+      password: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      setLoginLoading(true);
+      setLoginError(null);
+      setFormValues(values);
+      login({
+        variables: {
+          fields: {
+            identifier: values.email,
+            password: values.password,
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape(schemas[0]),
+  });
+
+  const handleFormData = (value, name) => {
+    setState({
+      ...state,
+      [name]: value,
+    });
+  };
+
+  const handleDonation = (e) => {
+    e.preventDefault();
+    console.log("Donation form data: ", state);
+
+    setState({
+      ...state,
+      price: "",
+    });
+  };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
+    <ThemeProvider theme={charityTheme}>
+      <Fragment>
+        {/* Start charity head section */}
+        <Head>
+          <title>Sign in to esaar</title>
+          <meta name="Description" content="React next landing page" />
+          <meta name="theme-color" content="#FCF22B" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+          {/* Load google fonts */}
+          <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap"
+            rel="stylesheet"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            href="/account"
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+        </Head>
+        <ResetCSS />
+        <GlobalStyle />
+        <CharityWrapper>
+          <Sticky top={0} innerZ={9999} activeClass="sticky-nav-active">
+            <Navbar />
+          </Sticky>
+          <DrawerProvider>
+            <DrawerSection />
+          </DrawerProvider>
+          <ContentWrapper>
+            <Grid
+              container
+              style={{
+                maxWidth: "1170px",
+                minHeight: "100vh",
+                paddingTop: "140px",
+                marginLeft: "170px",
+              }}
+            >
+              <Grid item md={2}></Grid>
+              <Grid item md={8} style={{ marginLeft: "30px" }}>
+                <Paper style={{ height: "75vh" }}>
+                  <Container style={{ padding: "40px" }}>
+                    {" "}
+                    <Heading content="Sign In" color="#05B890" /> <Divider />
+                    <Grid container>
+                      <Grid item md={5} style={{ marginTop: "30px" }}>
+                        <Heading
+                          content="Email ID"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />{" "}
+                        {/* FIXME: Color of text fields */}
+                        <TextField
+                          id="outlined-basic"
+                          label=""
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.email && touched.email}
+                          helperText={
+                            errors.email && touched.email ? errors.email : null
+                          }
+                          size="small"
+                          style={{ color: "#3E2672" }}
+                          fullWidth
+                        />
+                        <Heading
+                          content="Password"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />{" "}
+                        {/* FIXME: Color of text fields */}
+                        <TextField
+                          label=""
+                          name="password"
+                          onChange={handleChange}
+                          type="password"
+                          value={values.password}
+                          onBlur={handleBlur}
+                          fullWidth
+                          error={errors.password && touched.password}
+                          helperText={
+                            errors.password && touched.password
+                              ? errors.password
+                              : null
+                          }
+                        />
+                      </Grid>
+
+                      <Grid
+                        container
+                        item
+                        md={12}
+                        style={{
+                          alignContent: "center",
+                        }}
+                      >
+                        {loginError ? <Text content={loginError} /> : null}
+                      </Grid>
+
+                      <Grid
+                        container
+                        item
+                        md={12}
+                        style={{
+                          alignContent: "center",
+                        }}
+                      >
+                        <Button
+                          title="Sign-in"
+                          variant="extendedFab"
+                          onClick={handleSubmit}
+                          disabled={loginLoading}
+                          isLoading={loginLoading}
+                          style={{
+                            marginTop: "20px",
+                            marginLeft: "230px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minWidth: "200px",
+                            height: "auto",
+                          }}
+                        />
+                      </Grid>
+                      <Grid container item md={12}>
+                        <a href="/signup_o">Forgot Password?</a>
+                      </Grid>
+                    </Grid>
+                  </Container>
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+          </ContentWrapper>
+          <Footer />
+        </CharityWrapper>
+        {/* End of charity wrapper section */}
+      </Fragment>
+    </ThemeProvider>
   );
 }
