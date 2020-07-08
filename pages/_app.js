@@ -35,6 +35,7 @@ import Nodefetch from "node-fetch";
 import theme from "../theme";
 import getToken from "../lib/getToken";
 import { UserProvider } from "../lib/userData";
+import CookieChecker from "../lib/cookieChecker";
 
 global.Headers = Nodefetch.Headers;
 
@@ -83,6 +84,7 @@ class MyApp extends App {
           {/* <CssBaseline /> */}
           <ApolloProvider client={apollo}>
             <UserProvider>
+              <CookieChecker />
               <Modal />
               <Component {...pageProps} />
             </UserProvider>

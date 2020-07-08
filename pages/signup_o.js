@@ -29,7 +29,7 @@ import Button from "../common/src/components/Button";
 import Heading from "../common/src/components/Heading";
 import TextField from "@material-ui/core/TextField";
 import { DropzoneArea } from "material-ui-dropzone";
-
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -41,6 +41,9 @@ export default () => {
   const [formValues, setFormValues] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  const [filedIds, setFileIDs] = useState([]);
+  const [regFile, setRegFile] = useState(null);
+  const [taxFile, setTaxFile] = useState(null);
 
   const [registerUser] = useMutation(REGISTER, {
     onCompleted: (data) => {
@@ -127,6 +130,8 @@ export default () => {
               focalPerson: values.fullName,
               registrationNumber: values.regNumber,
               mobileNumber: values.mobileNumber,
+              registrationCertificate: regFile ? regFile.id : null,
+              taxExemptionForm: taxFile ? taxFile.id : null,
             },
           },
         },
@@ -135,6 +140,34 @@ export default () => {
     validationSchema: Yup.object().shape(schemas[0]),
   });
 
+  const handlefiles = async (files, type) => {
+    setLoginLoading(true);
+    console.log(files, type);
+    if (files.length) {
+      const form = new FormData();
+      files.forEach((file) => {
+        form.append("files", file);
+      });
+
+      await axios
+        .post("http://localhost:1337/upload", form, {
+          headers: {
+            "Content-type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          //setFileIDs([...filedIds, ...res.data]);
+          if (type == "registration") {
+            setRegFile(res.data[0]);
+          }
+          if (type == "tax") {
+            setTaxFile(res.data[0]);
+          }
+          setLoginLoading(false);
+        });
+    }
+  };
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
@@ -173,7 +206,7 @@ export default () => {
             >
               <Grid item md={2}></Grid>
               <Grid item md={8} style={{ marginLeft: "30px" }}>
-                <Paper style={{ height: "170vh" }}>
+                <Paper style={{ height: "100%" }}>
                   <Container style={{ padding: "40px" }}>
                     {" "}
                     <Heading
@@ -368,7 +401,7 @@ export default () => {
                       <DropzoneArea
                         acceptedFiles={["image/*"]}
                         dropzoneText={"Drag and drop images here or click"}
-                        onChange={(files) => console.log("Files:", files)}
+                        onChange={(files) => handlefiles(files, "registration")}
                       />
                       <Heading
                         content="Tax Exemption Form"
@@ -378,7 +411,7 @@ export default () => {
                       <DropzoneArea
                         acceptedFiles={["image/*"]}
                         dropzoneText={"Drag and drop images here or click"}
-                        onChange={(files) => console.log("Files:", files)}
+                        onChange={(files) => handlefiles(files, "tax")}
                       />
                       <Grid
                         container

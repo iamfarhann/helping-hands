@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useState } from "react";
 import Head from "next/head";
 import Sticky from "react-stickynode";
@@ -48,6 +48,11 @@ import SectionWrapper, {
   DonateButton,
 } from "../containers/Charity/donateSection/donateSection.style";
 import { addCredits, currencyOptions } from "../common/src/data/Charity";
+
+import cookie from "js-cookie";
+import { useRouter } from "next/router";
+import { useData, useDispatchUser } from "../lib/userData";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -62,12 +67,18 @@ function ListItemLink(props) {
 
 export default () => {
   const classes = useStyles();
+  const router = useRouter();
+  const dispatch = useDispatchUser();
+  const donor = useData();
+
   const [state, setState] = useState({
     price: "",
     currency: "usd",
     policy: "oneTime",
   });
-
+  useEffect(() => {
+    console.log(donor, "donor");
+  }, [donor]);
   const handleFormData = (value, name) => {
     setState({
       ...state,
@@ -83,6 +94,13 @@ export default () => {
       ...state,
       price: "",
     });
+  };
+  const handleLogout = () => {
+    console.log("logout called");
+    cookie.remove("token");
+    // client.resetStore();
+    dispatch({ type: "LOGOUT", payload: {} });
+    router.push("/");
   };
 
   return (
@@ -148,7 +166,7 @@ export default () => {
                           <ListItemText primary="Past Projects" />
                         </ListItem>
                         <Divider />
-                        <ListItem button>
+                        <ListItem button onClick={handleLogout}>
                           <ListItemIcon>
                             <PowerSettingsNewIcon />
                           </ListItemIcon>

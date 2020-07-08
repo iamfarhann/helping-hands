@@ -25,6 +25,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { LOGIN, REGISTER } from "../lib/mutations";
+import cookie from "js-cookie";
+import { useDispatchUser } from "../lib/userData";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function signup() {
   const router = useRouter();
+  const dispatch = useDispatchUser();
   const [formValues, setFormValues] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
@@ -54,7 +57,16 @@ export default function signup() {
   const [login] = useMutation(LOGIN, {
     onCompleted: (data) => {
       console.log(data, "donor");
-      router.push("/");
+      cookie.set("token", data.login.jwt, { expires: 30 });
+      // let globalObject = data.login.user.isDonor
+      //   ? data.login.user.donor
+      //   : data.login.user.organization;
+      dispatch({
+        type: "LOGIN",
+        payload: {},
+      });
+
+      //router.push("/");
     },
     onError: ({ networkError, graphQLErrors }) => {
       // console.log(networkError.result, graphQLErrors, "Donor Signup");
