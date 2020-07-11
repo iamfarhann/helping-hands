@@ -217,7 +217,6 @@ export default function signup() {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
                           name="mobileNumber"
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -263,7 +262,6 @@ export default function signup() {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
                           label=""
                           type="email"
                           name="email"
@@ -284,7 +282,6 @@ export default function signup() {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
                           name="cnic"
                           onChange={handleChange}
                           onBlur={handleBlur}

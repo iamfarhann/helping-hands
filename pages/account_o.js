@@ -1,5 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
+import Link from "next/link";
 import { useState } from "react";
+import Text from "../common/src/components/Text";
 import Image from "../common/src/components/Image";
 import Head from "next/head";
 import Sticky from "react-stickynode";
@@ -28,8 +30,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
 import Button from "../common/src/components/Button";
 import Heading from "../common/src/components/Heading";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -37,20 +37,18 @@ import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import TextField from "@material-ui/core/TextField";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import PasswordField from "material-ui-password-field";
 
 import { DropzoneArea } from "material-ui-dropzone";
+import axios from "axios";
+import cookie from "js-cookie";
+import { useRouter } from "next/router";
+import { useData, useDispatchUser } from "../lib/userData";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { UPDATE_ORGANIZATION } from "../lib/mutations";
 
-import InputGroup from "../common/src/components/InputGroup";
-import RadioGroup from "../common/src/components/RadioGroup";
-import SectionWrapper, {
-  ContentArea,
-  ButtonGroup,
-  DonationForm,
-  DonateButton,
-} from "../containers/Charity/donateSection/donateSection.style";
-import { addCredits, currencyOptions } from "../common/src/data/Charity";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -65,29 +63,210 @@ function ListItemLink(props) {
 
 export default () => {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "usd",
-    policy: "oneTime",
+  const dispatch = useDispatchUser();
+  const organization = useData(); //returns context
+  const [filedIds, setFileIDs] = useState([]);
+  const [logo, setLogo] = useState(null);
+  const [cover, setCover] = useState(null);
+  const [regFile, setRegFile] = useState(null);
+  const [taxFile, setTaxFile] = useState(null);
+
+  const [formValues, setFormValues] = useState("");
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [updateError, setUpdateError] = useState("");
+
+  const [fileLoading, setFileLoading] = useState(false);
+  const [fileError, setFileError] = useState("");
+
+  const [updateOrganization] = useMutation(UPDATE_ORGANIZATION, {
+    onCompleted: (data) => {
+      console.log(data);
+      dispatch({
+        type: "UPDATE",
+        payload: data.updateOrganization.organization,
+      });
+      setUpdateError("Changes saved succesfully!");
+      setUpdateLoading(false);
+    },
+    onError: (error) => {
+      console.log(error);
+      setUpdateError("Sorry an error occurred. Please try again!");
+    },
   });
+  const [updateFiles] = useMutation(UPDATE_ORGANIZATION, {
+    onCompleted: (data) => {
+      console.log(data);
+      dispatch({
+        type: "UPDATE",
+        payload: data.updateOrganization.organization,
+      });
+      setFileError("File Uploaded Succesfully!");
+      setFileLoading(false);
+    },
+    onError: (error) => {
+      console.log(error);
+      setFileError("Sorry an error occurred. Please try again!");
+    },
+  });
+  const schemas = [
+    {
+      email: Yup.string()
+        .email("Email not valid")
+        .required("Please Enter Your Email"),
 
-  const handleFormData = (value, name) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
+      focalPerson: Yup.string().required("Please Enter Full Name"),
+      mobileNumber: Yup.string().required("Please Enter Your Mobile Number"),
+      organizationName: Yup.string().required("Please Enter Organization Name"),
+      address: Yup.string().required("Please Enter Organization Address"),
+      registrationNumber: Yup.string(),
+    },
+  ];
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      focalPerson: "",
+      mobileNumber: "",
+      organizationName: "",
+      address: "",
+      registrationNumber: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      setUpdateLoading(true);
+      setUpdateError(null);
+      setFormValues(values);
+      updateOrganization({
+        variables: {
+          fields: {
+            data: {
+              focalPerson: values.focalPerson,
+              mobileNumber: values.mobileNumber,
+              address: values.address,
+              organizationName: values.organizationName,
+              registrationNumber: values.registrationNumber,
+            },
+            where: { id: organization.id },
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape(schemas[0]),
+  });
+  useEffect(() => {
+    console.log(organization, "organization");
+    if (organization["id"]) {
+      setFieldValue("organizationName", organization.organizationName);
+      setFieldValue("registrationNumber", organization.registrationNumber);
+      setFieldValue("focalPerson", organization.focalPerson);
+      setFieldValue("email", organization.user.email);
+      setFieldValue("address", organization.address);
+      setFieldValue("mobileNumber", organization.mobileNumber);
+    }
+  }, [organization]);
+
+  const handlefiles = async (files, type) => {
+    console.log(files, type);
+    if (files.length) {
+      setFileLoading(true);
+
+      const form = new FormData();
+      files.forEach((file) => {
+        form.append("files", file);
+      });
+      try {
+        await axios
+          .post("http://localhost:1337/upload", form, {
+            headers: {
+              "Content-type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            //setFileIDs([...filedIds, ...res.data]);
+            if (type == "logo") {
+              //setLogo(res.data[0]);
+              updateFiles({
+                variables: {
+                  fields: {
+                    data: {
+                      profilePicture: res.data[0].id,
+                    },
+                    where: {
+                      id: organization.id,
+                    },
+                  },
+                },
+              });
+            }
+            if (type == "cover") {
+              // setTaxFile(res.data[0]);
+              updateFiles({
+                variables: {
+                  fields: {
+                    data: {
+                      profilePicture: res.data[0].id,
+                    },
+                    where: {
+                      id: organization.id,
+                    },
+                  },
+                },
+              });
+            }
+            if (type == "regFile") {
+              // setTaxFile(res.data[0]);
+              updateFiles({
+                variables: {
+                  fields: {
+                    data: {
+                      registrationCertificate: res.data[0].id,
+                    },
+                    where: {
+                      id: organization.id,
+                    },
+                  },
+                },
+              });
+            }
+            if (type == "taxFile") {
+              // setTaxFile(res.data[0]);
+              updateFiles({
+                variables: {
+                  fields: {
+                    data: {
+                      taxExemptionForm: res.data[0].id,
+                    },
+                    where: {
+                      id: organization.id,
+                    },
+                  },
+                },
+              });
+            }
+            setUpdateLoading(false);
+          });
+      } catch (error) {
+        console.log(error, "error");
+        setFileError("Sorry an error occurred. Please try again!");
+      }
+    }
   };
+  const handleLogout = () => {
+    console.log("logout called");
+    cookie.remove("token");
 
-  const handleDonation = (e) => {
-    e.preventDefault();
-    console.log("Donation form data: ", state);
+    dispatch({ type: "LOGOUT", payload: {} });
 
-    setState({
-      ...state,
-      price: "",
-    });
+    window.location = "/";
   };
-
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
@@ -130,28 +309,34 @@ export default () => {
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
-                        <ListItem button component="a" href="/account_o">
-                          <ListItemIcon>
-                            <AccountCircleIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Account" />
-                        </ListItem>
+                        <Link href="/account_o">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Account" />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button component="a" href="/addProject">
-                          <ListItemIcon>
-                            <BusinessCenterIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Add Project " />
-                        </ListItem>
+                        <Link href="/addProject">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <BusinessCenterIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Add Project " />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button component="a" href="/myProjects">
-                          <ListItemIcon>
-                            <AssessmentIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Projects" />
-                        </ListItem>
+                        <Link href="/myProjects">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AssessmentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Projects" />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button>
+                        <ListItem button onClick={handleLogout}>
                           <ListItemIcon>
                             <PowerSettingsNewIcon />
                           </ListItemIcon>
@@ -163,7 +348,7 @@ export default () => {
                 </Paper>
               </Grid>
               <Grid item md={8} style={{ marginLeft: "30px" }}>
-                <Paper style={{ height: "170vh" }}>
+                <Paper style={{ height: "100%" }}>
                   <Container style={{ padding: "40px" }}>
                     {" "}
                     <Heading content="Profile" color="#05B890" /> <Divider />
@@ -174,8 +359,19 @@ export default () => {
                           as="h4"
                           style={{ marginTop: "1rem" }}
                         />{" "}
-                        {/* FIXME: Color of text fields */}
                         <TextField
+                          name="organizationName"
+                          value={values.organizationName}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={
+                            errors.organizationName && touched.organizationName
+                          }
+                          helperText={
+                            errors.organizationName && touched.organizationName
+                              ? errors.organizationName
+                              : null
+                          }
                           id="outlined-basic"
                           label=""
                           variant="outlined"
@@ -190,6 +386,16 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
+                          name="focalPerson"
+                          value={values.focalPerson}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.focalPerson && touched.focalPerson}
+                          helperText={
+                            errors.focalPerson && touched.focalPerson
+                              ? errors.focalPerson
+                              : null
+                          }
                           id="outlined-basic"
                           label=""
                           variant="outlined"
@@ -203,7 +409,18 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
-                          id="outlined-basic"
+                          type="email"
+                          name="email"
+                          inputProps={{
+                            readOnly: true,
+                          }}
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.email && touched.email}
+                          helperText={
+                            errors.email && touched.email ? errors.email : null
+                          }
                           label=""
                           variant="outlined"
                           size="small"
@@ -211,17 +428,14 @@ export default () => {
                           fullWidth
                         />
                         <Heading
-                          content="Password"
+                          content="Logo"
                           as="h4"
                           style={{ marginTop: "1rem" }}
-                        />{" "}
-                        {/* FIXME: Color of text fields */}
-                        <PasswordField
-                          hintText="At least 8 characters"
-                          floatingLabelText="Enter your password"
-                          errorText="Your password is too short"
-                          fullWidth
-                          variant="outlined"
+                        />
+                        <DropzoneArea
+                          acceptedFiles={["image/*"]}
+                          dropzoneText={"Drag and drop images here or click"}
+                          onChange={(files) => handlefiles(files, "logo")}
                         />
                       </Grid>
                       <Grid item md={1} />
@@ -233,6 +447,20 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
+                          name="registrationNumber"
+                          value={values.registrationNumber}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={
+                            errors.registrationNumber &&
+                            touched.registrationNumber
+                          }
+                          helperText={
+                            errors.registrationNumber &&
+                            touched.registrationNumber
+                              ? errors.registrationNumber
+                              : null
+                          }
                           id="outlined-basic"
                           label=""
                           variant="outlined"
@@ -247,6 +475,16 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
+                          name="mobileNumber"
+                          value={values.mobileNumber}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.mobileNumber && touched.mobileNumber}
+                          helperText={
+                            errors.mobileNumber && touched.mobileNumber
+                              ? errors.mobileNumber
+                              : null
+                          }
                           id="outlined-basic"
                           label=""
                           variant="outlined"
@@ -260,48 +498,45 @@ export default () => {
                         />{" "}
                         {/* FIXME: Color of text fields */}
                         <TextField
+                          name="address"
+                          value={values.address}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.address && touched.address}
+                          helperText={
+                            errors.address && touched.address
+                              ? errors.address
+                              : null
+                          }
                           id="outlined-basic"
                           label=""
                           variant="outlined"
                           multiline
-                          rows={6}
+                          rows={1}
                           size="small"
                           style={{ color: "#05B890" }}
                           fullWidth
+                        />
+                        <Heading
+                          content="Cover"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />
+                        <DropzoneArea
+                          acceptedFiles={["image/*"]}
+                          dropzoneText={"Drag and drop images here or click"}
+                          onChange={(files) => handlefiles(files, "cover")}
                         />
                       </Grid>
                       <Grid
                         container
                         item
                         md={12}
-                        style={{ alignContent: "center" }}
+                        style={{
+                          alignContent: "center",
+                        }}
                       >
-                        <a href="/project">
-                          <Button
-                            title="Save Changes"
-                            variant="textButton"
-                            style={{
-                              marginTop: "20px",
-                              marginLeft: "230px",
-
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              minWidth: "200px",
-                              height: "auto",
-                              border: "0",
-                              fontSize: "15px",
-                              fontWeight: "700",
-                              borderRadius: "10px",
-                              cursor: "pointer",
-                              color: "#FFFFFF",
-                              backgroundColor: "#05B890",
-                              position: "relative",
-                              overflow: "hidden",
-                              zIndex: "1",
-                            }}
-                          />
-                        </a>
+                        {updateError ? <Text content={updateError} /> : null}
                       </Grid>
                     </Grid>
                     <Grid item md={12} style={{ marginTop: "30px" }}>
@@ -315,7 +550,7 @@ export default () => {
                       <DropzoneArea
                         acceptedFiles={["image/*"]}
                         dropzoneText={"Drag and drop images here or click"}
-                        onChange={(files) => console.log("Files:", files)}
+                        onChange={(files) => handlefiles(files, "regFile")}
                       />
                       <Heading
                         content="Tax Exemption Form"
@@ -325,40 +560,41 @@ export default () => {
                       <DropzoneArea
                         acceptedFiles={["image/*"]}
                         dropzoneText={"Drag and drop images here or click"}
-                        onChange={(files) => console.log("Files:", files)}
+                        onChange={(files) => handlefiles(files, "taxFile")}
                       />
+                      <Grid
+                        container
+                        item
+                        md={12}
+                        style={{
+                          alignContent: "center",
+                        }}
+                      >
+                        {fileError ? <Text content={fileError} /> : null}
+                      </Grid>
+
                       <Grid
                         container
                         item
                         md={12}
                         style={{ alignContent: "center" }}
                       >
-                        <a href="/project">
-                          <Button
-                            title="Save Changes"
-                            variant="textButton"
-                            style={{
-                              marginTop: "20px",
-                              marginLeft: "250px",
-
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              minWidth: "200px",
-                              height: "auto",
-                              border: "0",
-                              fontSize: "15px",
-                              fontWeight: "700",
-                              borderRadius: "10px",
-                              cursor: "pointer",
-                              color: "#FFFFFF",
-                              backgroundColor: "#05B890",
-                              position: "relative",
-                              overflow: "hidden",
-                              zIndex: "1",
-                            }}
-                          />
-                        </a>
+                        <Button
+                          title="Update Changes"
+                          variant="extendedFab"
+                          onClick={handleSubmit}
+                          disabled={updateLoading}
+                          isLoading={updateLoading}
+                          style={{
+                            marginTop: "20px",
+                            marginLeft: "230px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minWidth: "200px",
+                            height: "auto",
+                          }}
+                        />
                       </Grid>
                     </Grid>
                   </Container>

@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import Link from "next/link";
 import { useState } from "react";
 import Head from "next/head";
 import Sticky from "react-stickynode";
@@ -69,7 +70,14 @@ export default () => {
       price: "",
     });
   };
+  const handleLogout = () => {
+    console.log("logout called");
+    cookie.remove("token");
 
+    dispatch({ type: "LOGOUT", payload: {} });
+
+    window.location = "/";
+  };
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
@@ -112,28 +120,34 @@ export default () => {
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
-                        <ListItem button component="a" href="/account_o">
-                          <ListItemIcon>
-                            <AccountCircleIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Account" />
-                        </ListItem>
+                        <Link href="/account_o">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Account" />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button component="a" href="/addProject">
-                          <ListItemIcon>
-                            <BusinessCenterIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Add Project " />
-                        </ListItem>
+                        <Link href="/addProject">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <BusinessCenterIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Add Project " />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button component="a" href="/myProjects">
-                          <ListItemIcon>
-                            <AssessmentIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Projects" />
-                        </ListItem>
+                        <Link href="/myProjects">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AssessmentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Projects" />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button>
+                        <ListItem button onClick={handleLogout}>
                           <ListItemIcon>
                             <PowerSettingsNewIcon />
                           </ListItemIcon>
