@@ -26,7 +26,7 @@ module.exports = withPlugins(
       env: {
         SERVER_URL: "http://localhost:1337/graphql",
         // AVATAR_URL:'https://api.adorable.io/avatars/285/',
-        PLAIN_URL: "http://localhost:1337/",
+        PLAIN_URL: "http://localhost:1337",
         // PLAIN_URL:"http://34.87.95.159/",
       },
     }),
