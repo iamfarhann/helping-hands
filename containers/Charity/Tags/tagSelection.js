@@ -19,7 +19,7 @@ export default function TagSelection({ values, setFieldValue }) {
     if (data["tags"]) {
       setAddTags(data.tags);
     }
-  }, [data]);
+  }, [data, loading]);
 
   const handleAddTag = (tag) => {
     console.log(tag);

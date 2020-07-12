@@ -5,7 +5,7 @@ const colors = {
   primaryHover: "#C3EEE4",
   primary2: "#C3EEE4",
   secondary: "#3E2672",
-  secondary2: "#9F93B9",
+  secondary2: "#3E2672",
   secondaryHover: "#9F93B9",
   yellow: "#fdb32a",
   yellowHover: "#C3EEE4",

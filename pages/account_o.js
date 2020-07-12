@@ -119,6 +119,8 @@ export default () => {
       organizationName: Yup.string().required("Please Enter Organization Name"),
       address: Yup.string().required("Please Enter Organization Address"),
       registrationNumber: Yup.string(),
+      overview: Yup.string().required("Please Enter Your Organization Overiew"),
+      mission: Yup.string().required("Please Enter Your Organization Mission"),
     },
   ];
   const {
@@ -137,6 +139,8 @@ export default () => {
       organizationName: "",
       address: "",
       registrationNumber: "",
+      overview: "",
+      mission: "",
     },
     onSubmit: (values) => {
       console.log(values);
@@ -152,6 +156,8 @@ export default () => {
               address: values.address,
               organizationName: values.organizationName,
               registrationNumber: values.registrationNumber,
+              overview: values.overview,
+              mission: values.mission,
             },
             where: { id: organization.id },
           },
@@ -169,6 +175,14 @@ export default () => {
       setFieldValue("email", organization.user.email);
       setFieldValue("address", organization.address);
       setFieldValue("mobileNumber", organization.mobileNumber);
+      setFieldValue(
+        "overview",
+        organization.overview ? organization.overview : ""
+      );
+      setFieldValue(
+        "mission",
+        organization.mission ? organization.mission : ""
+      );
     }
   }, [organization]);
 
@@ -347,6 +361,7 @@ export default () => {
                   </Container>
                 </Paper>
               </Grid>
+
               <Grid item md={8} style={{ marginLeft: "30px" }}>
                 <Paper style={{ height: "100%" }}>
                   <Container style={{ padding: "40px" }}>
@@ -526,6 +541,63 @@ export default () => {
                           acceptedFiles={["image/*"]}
                           dropzoneText={"Drag and drop images here or click"}
                           onChange={(files) => handlefiles(files, "cover")}
+                        />
+                      </Grid>
+                      <Grid
+                        container
+                        item
+                        md={12}
+                        style={{
+                          alignContent: "center",
+                        }}
+                      >
+                        <Heading
+                          content="Organization Mission:"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />
+                        <TextField
+                          name="mission"
+                          value={values.mission}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.mission && touched.mission}
+                          helperText={
+                            errors.mission && touched.mission
+                              ? errors.mission
+                              : null
+                          }
+                          label=""
+                          variant="outlined"
+                          multiline
+                          rows={8}
+                          size="small"
+                          style={{ color: "#05B890" }}
+                          fullWidth
+                        />
+                        <Heading
+                          content="Organization Overview"
+                          as="h4"
+                          style={{ marginTop: "1rem" }}
+                        />
+                        <TextField
+                          name="overview"
+                          value={values.overview}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.overview && touched.overview}
+                          helperText={
+                            errors.overview && touched.overview
+                              ? errors.overview
+                              : null
+                          }
+                          label=""
+                          variant="outlined"
+                          multiline
+                          rows={8}
+                          size="small"
+                          style={{ color: "#05B890" }}
+                          fullWidth
                         />
                       </Grid>
                       <Grid

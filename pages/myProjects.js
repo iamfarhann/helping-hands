@@ -33,7 +33,9 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import FundraiserSection from "../containers/Charity/ProjectOrganization";
+import Project from "../containers/Charity/ProjectOrganization";
+
+import cookie from "js-cookie";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -42,40 +44,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
-
 export default () => {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "Shaukat Khanum",
-    policy: "oneTime",
-  });
-
-  const handleFormData = (value, name) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
-  };
-
-  const handleDonation = (e) => {
-    e.preventDefault();
-    console.log("Donation form data: ", state);
-
-    setState({
-      ...state,
-      price: "",
-    });
-  };
   const handleLogout = () => {
     console.log("logout called");
     cookie.remove("token");
-
     dispatch({ type: "LOGOUT", payload: {} });
-
     window.location = "/";
   };
   return (
@@ -116,7 +90,7 @@ export default () => {
               }}
             >
               <Grid item md={3}>
-                <Paper style={{ height: "90vh" }}>
+                <Paper style={{ height: "100%" }}>
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
@@ -158,32 +132,22 @@ export default () => {
                   </Container>
                 </Paper>
               </Grid>
+
               <Grid item md={8} style={{ marginLeft: "30px" }}>
-                <Paper style={{ height: "150vh" }}>
+                <Paper style={{ height: "100%" }}>
                   <Container style={{ padding: "40px" }}>
                     {" "}
                     <Heading content="Past Projects" color="#05B890" />{" "}
                     <Divider />
-                    {/* <BlogPost
-                      thumbUrl="http://lorempixel.com/600/400"
-                      title="Help COVID patients"
-                      excerpt="The academic world stands witness to several occasions when Pakistani students stunned their peers, international counterparts, and even their mentors by not only acing but also setting unimaginably high standards of success in numerous international examinations and certifications. "
-                      link={
-                        <a>
-                          <span className="hyphen"></span>
-                          <span className="btn_text">Add</span>
-                        </a>
-                      }
-                    /> */}
                     <Grid container>
                       <Grid item md={4}>
-                        <FundraiserSection />
+                        <Project />
                       </Grid>
                       <Grid item md={4}>
-                        <FundraiserSection />
+                        <Project />
                       </Grid>
                       <Grid item md={4}>
-                        <FundraiserSection />
+                        <Project />
                       </Grid>
                     </Grid>
                   </Container>

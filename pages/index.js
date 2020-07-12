@@ -13,7 +13,7 @@ import BranchSection from "../containers/Charity/BranchSection";
 import WorkSection from "../containers/Charity/WorkSection";
 import MilestoneBlock from "../containers/Charity/MilestoneBlock";
 import HumanityBlock from "../containers/Charity/HumanityBlock";
-import PromotionBlock from "../containers/Charity/PromotionBlock";
+import Portfolios from "../containers/Charity/Portfolios";
 import DonateSection from "../containers/Charity/DonateSection";
 import MapSection from "../containers/Charity/MapSection";
 import FundraiserSection from "../containers/Charity/FundraiserSection";
@@ -61,9 +61,9 @@ export default () => {
             <FeatureSection />
             <BranchSection />
             <FundraiserSection />
-            <PromotionBlock />
+            <Portfolios />
             <HumanityBlock />
-            <PromotionBlock />
+            <Portfolios />
 
             <BlogSection />
             <ClientBlock />

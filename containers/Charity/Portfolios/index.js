@@ -23,15 +23,21 @@ const PromotionBlock = ({ row, col }) => {
         <Box className="row" {...row}>
           <Box className="col" {...col}>
             <ContentWrapper>
-              <Heading as="h5" content={slogan} />
+              {/* <Heading as="h5" content={slogan} />
               <Heading content={title} />
               <Text content={text1} />
               <Text content={text2} />
-              <List>
+               */}
+
+              <Heading as="h5" content="CREATE YOUR DONATION PROTFOLIOS" />
+              <Heading content="Donate to your favorite organizations every month, hasstle-free!" />
+              <Text content={text1} />
+              <Text content={text2} />
+              {/* <List>
                 {lists.map((item) => (
                   <Item key={`list_key${item.id}`}>{item.text}</Item>
                 ))}
-              </List>
+              </List> */}
               <Link href="#1">
                 <a className="learn__more-btn">
                   <span className="hyphen" />
