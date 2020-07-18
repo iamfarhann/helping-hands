@@ -29,10 +29,12 @@ const BannerSection = () => {
       <LeftBar text="SCROLL DOWN" offset={81} sectionId="#feature" />
       <ContentWrapper>
         <TextArea>
-          <HighlightedText className="highlighted_text">
-            <strong>NEWS</strong> 1 year. 100 Forever Families.
-            <Icon icon={chevronRight} />
-          </HighlightedText>
+          <Link href="/Projects/5f0b4ddaa9568904e4b6088a">
+            <HighlightedText className="highlighted_text">
+              <strong>Recommended</strong> Explore projects which matter to you!
+              <Icon icon={chevronRight} />
+            </HighlightedText>
+          </Link>
           <Heading
             content="Bring a smile to
           their faces."
@@ -43,7 +45,11 @@ const BannerSection = () => {
             your loved charities."
           />
           <Text content="   Explore projects, view rankings of charity organizations, donate with just a click; all in all, in one place" />
-          <Link href="/project">
+
+          <Link
+            href={`/projects/[project]`}
+            as={`/projects/5f0b4ddaa9568904e4b6088a`}
+          >
             <a className="learn__more-btn">
               <span className="hyphen" />
               <span className="btn_text">Explore Our Project</span>

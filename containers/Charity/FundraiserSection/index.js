@@ -33,7 +33,7 @@ const FundraiserSection = () => {
         </SectionHeader>
         <ContentArea>
           <ImageWrapper>
-            <Image src="/image/charity/fundraisers.png" alt="Charity" />
+            <Image src="./image/charity/banner/slide2.png" alt="Charity" />
           </ImageWrapper>
           <TextWrapper>
             <TextAndLink>
@@ -53,7 +53,7 @@ const FundraiserSection = () => {
             <DonationProgressbar>
               <BarArea>
                 <CurrentStatus>
-                  <strong>$95</strong> of $2,000 goal
+                  <strong>PKR 950</strong> of 20,000 goal
                 </CurrentStatus>
                 <Text content="Last donation 9m ago" />
               </BarArea>
@@ -61,7 +61,10 @@ const FundraiserSection = () => {
             </DonationProgressbar>
 
             <ShareArea>
-              <a href="/project">
+              <Link
+                href={`/projects/[project]`}
+                as={`/projects/5f0b4ddaa9568904e4b6088a`}
+              >
                 <Button
                   title="DONATE NOW"
                   style={{
@@ -82,7 +85,7 @@ const FundraiserSection = () => {
                     zIndex: "1",
                   }}
                 />
-              </a>
+              </Link>
               {/* <Image src="/image/charity/heart.svg" alt="Charity Landing" /> */}
               <ShareList>
                 <Item>Share on</Item>

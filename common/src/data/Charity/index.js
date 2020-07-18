@@ -101,40 +101,39 @@ export const featureData = {
     {
       id: 1,
       icon: "/image/charity/feature/1.svg",
-      title: "Health ",
+      title: "Animals ",
       description:
         "If you want to change the world, one wish at a time, help kids",
     },
     {
       id: 2,
       icon: "/image/charity/feature/2.svg",
-      title: "Food      ",
-      description: "If you want to change the world, one wish at a time.",
+      title: "Art & Culture",
+      description: "Make it happen with your donation",
     },
     {
       id: 3,
       icon: "/image/charity/feature/3.svg",
-      title: " Orphans      ",
-      description: "If you want to change the world, one wish at a time.",
+      title: "Food",
+      description: "Feed the needy people who look up to you .",
     },
     {
       id: 4,
       icon: "/image/charity/feature/4.svg",
-      title: "Volunteer With Us",
-      description:
-        "If you want to change the world, one wish at a time, help kids",
+      title: "Family",
+      description: "Support them to fulfil their school dreams",
     },
     {
       id: 5,
       icon: "/image/charity/feature/5.svg",
-      title: "Animals      ",
+      title: "Disasters",
 
       description: "If you want to change the world, one wish at.",
     },
     {
       id: 6,
       icon: "/image/charity/feature/6.svg",
-      title: " Education ",
+      title: "Health",
       description: "If you want to change the world, one wish at a time.",
     },
   ],

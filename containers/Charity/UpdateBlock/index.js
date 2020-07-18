@@ -28,14 +28,10 @@ const HumanityBlock = ({ row, col }) => {
           </Box>
           <Box className="col" {...col}>
             <ContentWrapper>
-              <Heading as="h5" content={slogan} />
-              <Heading content={title} />
-              <Text content={text} />
-              <List>
-                {lists.map((item) => (
-                  <Item key={`list_key${item.id}`}>{item.text}</Item>
-                ))}
-              </List>
+              <Heading as="h5" content="CHOOSE THE RIGHT ORGANIZATIONS" />
+              <Heading content="Get regular updates from the organizations you donate" />
+              <Text content="We have all the scattered information aggregated on one platform so you can see and compare the performance of different organization " />
+              <Text content="We keep records of every project that you donate to, so you get notifications as soon as an update is posted which helps you to decide whether to continue donating or shift the organization preference." />
               <Link href="#1">
                 <a className="learn__more-btn">
                   <span className="hyphen" />

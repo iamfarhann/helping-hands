@@ -88,7 +88,10 @@ const FundraiserSection = ({ project }) => {
           <Divider style={{ marginBottom: "5px" }} />
           <Text content={`status: ${data.project.status}`} />
           <Divider style={{ marginBottom: "5px" }} />
-          <Link href={`/projects/[project]`} as={`/project/${data.project.id}`}>
+          <Link
+            href={`/projects/[project]`}
+            as={`/projects/${data.project.id}`}
+          >
             <Button
               title="See Details"
               variant="textButton"

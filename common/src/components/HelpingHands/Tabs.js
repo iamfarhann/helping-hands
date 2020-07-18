@@ -131,7 +131,7 @@ export default function ScrollableTabsButtonForce({ organization }) {
             <Tab label="Projects" icon={<BallotIcon />} {...a11yProps(1)} />
 
             <Tab
-              label="Transparency Metrics"
+              label="Documents"
               icon={<AssessmentIcon />}
               {...a11yProps(2)}
             />
@@ -155,59 +155,34 @@ export default function ScrollableTabsButtonForce({ organization }) {
           </TabPanel>
 
           <TabPanel value={value} index={2}>
-            <Heading as="h3" content="Overview" />
-            <Text
-              content="
-              Akhuwat is the world’s largest Islamic micro-finance organization.
-              Since 2001, Akhuwat has been working for poverty alleviation by
-              empowering socially and economically marginalized segments of the
-              society through its various poverty alleviation projects. Akhuwat
-              aims to alleviate poverty by creating a bond of solidarity between
-              the affluent and the marginalized. Our goal is to develop and
-              sustain a social system based on mutual support. Akhuwat not only
-              helps and support the poor to become self-reliant but combined
-              with their own hard work enable them to escape the clutches of
-              poverty.
-            "
-            />
-            <Heading as="h3" content="Philosophy of Akhuwat" />
-            <Text
-              content="
-              Akhuwat derives its name from ‘mawakhaat’ or brotherhood, the
-              earliest example of which was seen in the community formed by the
-              Ansars, citizens of Medina and the Muhajireen, who had migrated to
-              Medina to escape religious persecution. Inspired by the spirit
-              which induced the Medinites to share half of their wealth with the
-              migrants, Akhuwat seeks to invoke this very concept of brotherhood
-              through its operations. For Akhuwat, the metaphor of brotherhood
-              entails the creation of a system based on mutual support in the
-              society."
-            />
-            <Heading as="h3" content="Our Values" />
-            <Text
-              content="
-              Interest-free Loans – The loan provided will be interest free
-              since providing loans with interest is business and poverty cannot
-              be alleviated and eradicated by doing business with the deprived.
-              Use of Religious Places – Akhuwat wants to climb up the ladder of
-              social and economic development through making Mosques, churches
-              and religious places, the foundation. This is because in Islamic
-              history Mosques used to be the seat of governance. In the time of
-              Prophet Muhammad PBUH, mosques were used for worship, training and
-              providing services. With this, comes the Transparency, Good
-              Governance, participation and accountability. Volunteerism – To
-              think beyond the confines of oneself and to think about others.
-              Akhuwat’s operations and activities rely upon the passion, energy,
-              zeal and enthusiasm of its volunteers. Transforming Borrowers into
-              Donors – Akhuwat strives to empower its borrowers, so they are in
-              a position to be givers one day. Non-Discrimination on Caste,
-              Color, Creed, Political Affiliation & Faith – Since Akhuwat
-              strongly believes in solidarity and brotherhood. Therefore, it
-              gives a message to cut down all the discriminatory and
-              differential barriers in the society such as caste, color creed,
-              political affiliation and religion.
-            "
-            />
+            <Grid container md={12} spacing={4}>
+              {organization.taxExemptionForm ? (
+                <Grid item md={3}>
+                  <a
+                    href={`${process.env.PLAIN_URL}${organization.taxExemptionForm.url}`}
+                    target="_blank"
+                  >
+                    <img
+                      src={`${process.env.PLAIN_URL}${organization.taxExemptionForm.url}`}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                  </a>
+                </Grid>
+              ) : null}
+              {organization.registrationCertificate ? (
+                <Grid item md={3}>
+                  <a
+                    href={`${process.env.PLAIN_URL}${organization.registrationCertificate.url}`}
+                    target="_blank"
+                  >
+                    <img
+                      src={`${process.env.PLAIN_URL}${organization.registrationCertificate.url}`}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                  </a>
+                </Grid>
+              ) : null}
+            </Grid>
           </TabPanel>
         </Box>
       </Box>

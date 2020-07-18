@@ -13,10 +13,12 @@ const useStyles = makeStyles((theme) => ({}));
 export default function TagSelection({ values, setFieldValue }) {
   const classes = useStyles();
   const [addTags, setAddTags] = useState([]);
-  const { data, loading, error } = useQuery(GET_TAGS);
+  const { data, loading, error } = useQuery(GET_TAGS, {
+    skip: !values,
+  });
 
   useEffect(() => {
-    if (data["tags"]) {
+    if (data) {
       setAddTags(data.tags);
     }
   }, [data, loading]);

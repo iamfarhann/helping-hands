@@ -21,10 +21,10 @@ const BlogSection = () => {
           <TitleArea>
             <Heading content="Blog & News Updates" />
             <Text>
-              People around the world are raising money for what they are
-              passionate about. Get The Latest PayBear Updates
+              Organizations accross Pakistan are raising money for what they are
+              passionate about. To get the latest updates
               <Link href="#1">
-                <a className="link">Join us on Community</a>
+                <a className="link">Join our Facebook Community</a>
               </Link>
             </Text>
           </TitleArea>
@@ -38,20 +38,28 @@ const BlogSection = () => {
           </LinkArea>
         </SectionHeader>
         <PostArea>
-          {posts.map((item) => (
-            <BlogPost
-              key={`blog__post-key${item.id}`}
-              thumbUrl={item.thumbUrl}
-              title={item.title}
-              excerpt={item.excerpt}
-              link={
-                <a className="learn__more-btn" href={item.btnUrl}>
-                  <span className="hyphen"></span>
-                  <span className="btn_text">{item.btnText}</span>
-                </a>
-              }
-            />
-          ))}
+          <BlogPost
+            thumbUrl="./image/charity/banner/slide1.jpg"
+            title="Where to Find Financial Help During the Coronavirus"
+            excerpt="The coronavirus pandemic has touched nearly every part of our daily lives, but much of the collective fear and anxiety…. "
+            link={
+              <a className="learn__more-btn" href="https://www.google.com">
+                <span className="hyphen"></span>
+                <span className="btn_text">Read More</span>
+              </a>
+            }
+          />
+          <BlogPost
+            thumbUrl="./image/charity/banner/slide2.png"
+            title="Learn How and When to Ask for Help with These Tips"
+            excerpt="Asking for help isn’t easy. It’s sometimes common for feelings like shame or embarrassment to arise from asking for something"
+            link={
+              <a className="learn__more-btn" href="https://www.google.com">
+                <span className="hyphen"></span>
+                <span className="btn_text">Read More</span>
+              </a>
+            }
+          />
         </PostArea>
       </Container>
     </SectionWrapper>

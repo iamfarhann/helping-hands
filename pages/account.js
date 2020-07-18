@@ -293,12 +293,14 @@ export default () => {
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
-                        <ListItem button component="a" href="/account">
-                          <ListItemIcon>
-                            <AccountCircleIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="My Profile" />
-                        </ListItem>
+                        <Link href="/account">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="My Profile" />
+                          </ListItem>
+                        </Link>
                         <Divider />
                         <Link href="/portfolio">
                           <ListItem button>

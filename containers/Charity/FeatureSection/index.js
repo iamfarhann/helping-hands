@@ -7,7 +7,7 @@ import SectionWrapper, {
   SectionHeader,
   FeatureWrapper,
 } from "./featureSection.style";
-
+import Link from "next/link";
 import { featureData } from "../../../common/src/data/Charity";
 
 const FeatureSection = () => {
@@ -22,12 +22,14 @@ const FeatureSection = () => {
         </SectionHeader>
         <FeatureWrapper>
           {features.map((item) => (
-            <BlogPost
-              key={`option_key${item.id}`}
-              thumbUrl={item.icon}
-              title={item.title}
-              excerpt={item.description}
-            />
+            <Link href="/account">
+              <BlogPost
+                key={`option_key${item.id}`}
+                thumbUrl={item.icon}
+                title={item.title}
+                excerpt={item.description}
+              />
+            </Link>
           ))}
         </FeatureWrapper>
       </Container>

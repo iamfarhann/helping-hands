@@ -1,18 +1,21 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { Box, Container, Grid, Divider } from '@material-ui/core';
-import Text from '../Text';
-import Heading from '../Heading';
-const useStyles = makeStyles(theme => ({
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import StepContent from "@material-ui/core/StepContent";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import { Box, Container, Grid, Divider } from "@material-ui/core";
+import Text from "../Text";
+import Heading from "../Heading";
+import { GET_PROJECT_UPDATES } from "../../../../lib/queries";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import moment from "moment";
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
   },
   button: {
     marginTop: theme.spacing(1),
@@ -27,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function getSteps() {
-  return ['Update # 3', 'Update # 2', 'Update # 1'];
+  return ["Update # 3", "Update # 2", "Update # 1"];
 }
 
 function getStepContent(step) {
@@ -37,100 +40,44 @@ function getStepContent(step) {
               you're willing to spend on clicks and conversions, which networks
               and geographical locations you want your ads to show on, and more.`;
     case 1:
-      return 'An ad group contains one or more ads which target a shared set of keywords.';
+      return "An ad group contains one or more ads which target a shared set of keywords.";
     case 2:
       return `Try out different ad text to see what brings in the most customers,
               and learn how to enhance your ads using features like ad extensions.
               If you run into any problems with your ads, find out how to tell if
               they're running and how to resolve approval issues.`;
     default:
-      return 'Unknown step';
-  }
-}
-function getStepImages(step) {
-  switch (step) {
-    case 0:
-      return (
-        <Grid
-          item
-          container
-          md={12}
-          spacing={2}
-          style={{ paddingRight: 0, margin: 0 }}
-        >
-          <Grid item md={2}>
-            <img
-              src="/slum.jpg"
-              height="100px"
-              width="100%"
-              style={{ borderRadius: 4, objectFit: 'cover' }}
-            />
-          </Grid>
-          <Grid item md={2}>
-            <img
-              src="/slum.jpg"
-              height="100px"
-              width="100%"
-              style={{ borderRadius: 4, objectFit: 'cover' }}
-            />
-          </Grid>
-          <Grid item md={2}>
-            <img
-              src="/slum.jpg"
-              height="100px"
-              width="100%"
-              style={{ borderRadius: 4, objectFit: 'cover' }}
-            />
-          </Grid>
-          <Grid item md={2}>
-            <img
-              src="/slum.jpg"
-              height="100px"
-              width="100%"
-              style={{ borderRadius: 4, objectFit: 'cover' }}
-            />
-          </Grid>
-          <Grid item md={2}>
-            <img
-              src="/slum.jpg"
-              height="100px"
-              width="100%"
-              style={{ borderRadius: 4, objectFit: 'cover' }}
-            />
-          </Grid>
-          <Grid item md={2}>
-            <img
-              src="/slum.jpg"
-              height="100px"
-              width="100%"
-              style={{ borderRadius: 4, objectFit: 'cover' }}
-            />
-          </Grid>
-        </Grid>
-      );
-    case 1:
-      return 'An ad group contains one or more ads which target a shared set of keywords.';
-    case 2:
-      return `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`;
-    default:
-      return 'Unknown step';
+      return "Unknown step";
   }
 }
 
-export default function UpdateStepper() {
+export default function UpdateStepper({ project }) {
+  const { data, loading, error, refetch } = useQuery(GET_PROJECT_UPDATES, {
+    variables: {
+      where: { project: project ? project.id : "" },
+      sort: "createdAt:desc",
+      start: 0,
+      limit: null,
+    },
+    skip: !project,
+  });
+
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
-
+  //const steps = getSteps();
+  const [steps, setSteps] = useState([]);
+  useEffect(() => {
+    if (data) {
+      console.log(data, "Updates");
+      setSteps(data.updates);
+    }
+  }, [data]);
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleReset = () => {
@@ -140,37 +87,32 @@ export default function UpdateStepper() {
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label}>
+        {steps.map((updateData, index) => (
+          <Step key={updateData.id}>
             <StepLabel>
-              {' '}
+              {" "}
               <Heading
                 as="h3"
                 color="#060F1E"
-                content={label}
-                style={{ padding: '0px', margin: '0px' }}
+                content={`Project Update on ${moment(
+                  updateData.createAt
+                ).format("MMMM Do, YYYY")}`}
+                style={{ padding: "0px", margin: "0px" }}
               />
             </StepLabel>
             <StepContent>
-              <Text color="#060F1E" content={getStepContent(index)} />
-              <img
-                src="https://picsum.photos/200"
-                height="100px"
-                width="100px"
-                style={{ borderRadius: 4, objectFit: 'cover', margin: 2 }}
-              />
-              <img
-                src="https://picsum.photos/200"
-                height="100px"
-                width="100px"
-                style={{ borderRadius: 4, objectFit: 'cover', margin: 2 }}
-              />
-              <img
-                src="https://picsum.photos/200"
-                height="100px"
-                width="100px"
-                style={{ borderRadius: 4, objectFit: 'cover', margin: 2 }}
-              />
+              <Text color="#060F1E" content={updateData.update} />
+              {updateData.images.map((item) => {
+                return (
+                  <img
+                    src={`${process.env.PLAIN_URL}${item.url}`}
+                    height="100px"
+                    width="100px"
+                    style={{ borderRadius: 4, objectFit: "cover", margin: 2 }}
+                  />
+                );
+              })}
+
               <div className={classes.actionsContainer}>
                 <div>
                   <Button
@@ -186,7 +128,7 @@ export default function UpdateStepper() {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
                   </Button>
                 </div>
               </div>

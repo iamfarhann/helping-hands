@@ -31,14 +31,14 @@ const PromotionBlock = ({ row, col }) => {
 
               <Heading as="h5" content="CREATE YOUR DONATION PROTFOLIOS" />
               <Heading content="Donate to your favorite organizations every month, hasstle-free!" />
-              <Text content={text1} />
-              <Text content={text2} />
+              <Text content="We allow you to choose and donate to the organizations with which you feel the most connected." />
+              <Text content="We encourage you to support different organizations. Just by selecting the preferred organizations and the causes, you can donate as low as Rs.10 that gets deducted from your wallet every month. " />
               {/* <List>
                 {lists.map((item) => (
                   <Item key={`list_key${item.id}`}>{item.text}</Item>
                 ))}
               </List> */}
-              <Link href="#1">
+              <Link href="/portfolio">
                 <a className="learn__more-btn">
                   <span className="hyphen" />
                   <span className="btn_text">Learn More </span>
