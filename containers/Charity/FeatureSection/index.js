@@ -22,14 +22,12 @@ const FeatureSection = () => {
         </SectionHeader>
         <FeatureWrapper>
           {features.map((item) => (
-            <Link href="/account">
-              <BlogPost
-                key={`option_key${item.id}`}
-                thumbUrl={item.icon}
-                title={item.title}
-                excerpt={item.description}
-              />
-            </Link>
+            <BlogPost
+              key={`option_key${item.id}`}
+              thumbUrl={item.icon}
+              title={item.title}
+              excerpt={item.description}
+            />
           ))}
         </FeatureWrapper>
       </Container>

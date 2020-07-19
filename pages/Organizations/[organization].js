@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-// import Container from '@material-ui/core/Container';
+import Link from "next/link";
 // import Typography from '@material-ui/core/Typography';
 // import Box from '@material-ui/core/Box';
 import {
@@ -54,10 +54,24 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useRouter } from "next/router";
 import { useData, useDispatchUser } from "../../lib/userData";
 import { ORGANIZATION_INFO } from "../../lib/queries";
+import { CREATE_PORTFOLIO } from "../../lib/mutations";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Error from "../../containers/Error";
 
-const thumbImage1 = "/image/charity/organization.jpg";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import RadioGroup from "../../common/src/components/RadioGroup";
+import TextField from "@material-ui/core/TextField";
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import moment from "moment";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -75,15 +89,107 @@ const useStyles = makeStyles((theme) => ({
 function Organization({ organizationID }) {
   const classes = useStyles();
   const router = useRouter();
-  const organization = useData();
+  const [portfolio, setPortfolio] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState("");
+  const donor = useData();
+  const dispatch = useDispatchUser();
   const { data, loading, error, refetch } = useQuery(ORGANIZATION_INFO, {
     variables: { fields: { id: organizationID } },
     skip: !organizationID,
     fetchPolicy: "network-only",
   });
+  const paymentPolicy = [
+    {
+      id: 1,
+      title: "One Time",
+      value: "once",
+      text: "One Time donation given",
+    },
+    {
+      id: 2,
+      title: "Ongoing",
+      value: "monthly",
+      text: "Everymonth donation given",
+    },
+  ];
   useEffect(() => {
     console.log(data);
   }, [data]);
+
+  const handlePortfolio = () => {
+    console.log("handle portfolio");
+    if (donor["id"]) {
+      setPortfolio(true);
+    } else router.push("/signin");
+  };
+
+  const [createPortfolio] = useMutation(CREATE_PORTFOLIO, {
+    onCompleted: (data) => {
+      console.log(data, "Portfolio Completed");
+
+      setPortfolio(false);
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          ...donor,
+          portfolios: donor.portfolios.concat(data.createPortfolio.portfolio),
+        },
+      });
+      setCreateError("Review Added succesfully!");
+      setCreateLoading(false);
+      handleReset();
+    },
+    onError: (error) => {
+      console.log(error);
+      setCreateError("Sorry an error occurred. Please try again!");
+    },
+  });
+  const schemas = [
+    {
+      paymentSize: Yup.number().required(
+        "Please enter a donation paymentSize."
+      ),
+      period: Yup.string().required("Please enter the period."),
+    },
+  ];
+
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      paymentSize: 0,
+      period: "",
+    },
+    onSubmit: (values) => {
+      console.log("Portfolio => On Submit");
+      console.log(values.period, "Period:");
+      setCreateLoading(true);
+      setCreateError(null);
+      createPortfolio({
+        variables: {
+          field: {
+            data: {
+              paymentSize: values.paymentSize,
+              period: values.period,
+              donor: donor ? donor.id : null,
+              organization: organizationID,
+              paymentDate: moment().format("YYYY-MM-DD"),
+            },
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape(schemas[0]),
+  });
+
   if (error) {
     return <Error statusCode={404} />;
   }
@@ -197,10 +303,40 @@ function Organization({ organizationID }) {
                   </Grid>
                   <Grid container style={{ marginLeft: "65px" }}>
                     <Grid item md={7} style={{ display: "flex" }}>
-                      <a href="/project">
+                      {donor &&
+                      donor.portfolios.filter(
+                        (portfolio) =>
+                          portfolio.organization.id == data.organizations[0].id
+                      ).length ? (
+                        <Link href="/portfolio">
+                          <Button
+                            title="Added to Portfolio"
+                            variant="outlined"
+                            style={{
+                              marginTop: "0px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              minWidth: "200px",
+                              height: "auto",
+                              border: "0",
+                              fontSize: "15px",
+                              fontWeight: "700",
+                              borderRadius: "10px",
+                              cursor: "pointer",
+                              color: "#FFFFFF",
+                              backgroundColor: "#05B890",
+                              position: "relative",
+                              overflow: "hidden",
+                              zIndex: "1",
+                            }}
+                          />
+                        </Link>
+                      ) : (
                         <Button
-                          title="Add to Protfolio"
+                          title="Add to Portfolio"
                           variant="textButton"
+                          onClick={handlePortfolio}
                           style={{
                             marginTop: "0px",
                             display: "flex",
@@ -220,8 +356,67 @@ function Organization({ organizationID }) {
                             zIndex: "1",
                           }}
                         />
-                      </a>
-                      <a href="/project">
+                      )}
+                      {portfolio ? (
+                        <Dialog
+                          open={portfolio}
+                          onClose={() => setPortfolio(false)}
+                          aria-labelledby="form-dialog-title"
+                        >
+                          <DialogTitle id="form-dialog-title">
+                            Add to portfolio
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText>
+                              {` By adding this organization to your portfolio you give your consent to one-time or monthly deduction from your wallet. This amount will be transferred into  ${data.organizations[0].organizationName}'s account`}
+                            </DialogContentText>
+
+                            <TextField
+                              type="number"
+                              autoFocus
+                              name="paymentSize"
+                              value={values.paymentSize}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={errors.paymentSize && touched.paymentSize}
+                              helperText={
+                                errors.paymentSize && touched.paymentSize
+                                  ? errors.paymentSize
+                                  : null
+                              }
+                              label="paymentSize"
+                              fullWidth
+                              style={{ marginBottom: "20px" }}
+                            />
+                            <RadioGroup
+                              name="period"
+                              value={paymentPolicy.id}
+                              items={paymentPolicy}
+                              onUpdate={(value) =>
+                                setFieldValue("period", value)
+                              }
+                            />
+                            {/* {donationError ? (
+                            <Text content={donationError} />
+                          ) : null} */}
+                          </DialogContent>
+                          <DialogActions>
+                            <Button
+                              onClick={() => setPortfolio(false)}
+                              title="Cancel"
+                              variant="extendedFab"
+                            />
+                            <Button
+                              title="Add"
+                              variant="extendedFab"
+                              onClick={handleSubmit}
+                              disabled={createLoading}
+                              isLoading={createLoading}
+                            />
+                          </DialogActions>
+                        </Dialog>
+                      ) : null}
+                      <a href={`mailto:${data.organizations[0].user.email}`}>
                         <Button
                           title="Contact"
                           variant="outlined"

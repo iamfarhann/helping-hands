@@ -68,15 +68,42 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useRouter } from "next/router";
 import { useData, useDispatchUser } from "../../lib/userData";
 import { GET_PROJECT } from "../../lib/queries";
+
+import { CREATE_DONATION } from "../../lib/mutations";
+
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Error from "../../containers/Error";
 import moment from "moment";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 
+import ShareModal from "../../common/src/components/shareModal";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import TextField from "@material-ui/core/TextField";
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import FsLightbox from "fslightbox-react";
+
 function Project({ projectID }) {
   const router = useRouter();
-  // const project = useData();
+  const [openShare, setOpenShare] = useState(false);
+  const [donations, setDonations] = useState(false);
+  const [donationLoading, setDonationLoading] = useState(false);
+  const [donationError, setDonationError] = useState("");
+  const dispatch = useDispatchUser();
+  const donor = useData();
+
+  const [toggler, setToggler] = useState(false);
+  const [coverToggler, setCoverToggler] = useState(false);
+  const [imageSlide, setImageSlider] = useState(0);
+
   const { data, loading, error, refetch } = useQuery(GET_PROJECT, {
     variables: { id: projectID },
     skip: !projectID,
@@ -84,6 +111,77 @@ function Project({ projectID }) {
   useEffect(() => {
     console.log(data);
   }, [data]);
+
+  const [createDonation] = useMutation(CREATE_DONATION, {
+    onCompleted: (data) => {
+      console.log(data);
+      setDonations(false);
+      refetch();
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          ...donor,
+          creditAmount:
+            donor.creditAmount - data.createDonation.donation.amount,
+        },
+      });
+      setDonationError("Review Added succesfully!");
+      setDonationLoading(false);
+      handleReset();
+    },
+    onError: (error) => {
+      console.log(error);
+      setDonationError("Sorry an error occurred. Please try again!");
+    },
+  });
+
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      donation: 10,
+    },
+    onSubmit: (values) => {
+      console.log("Review On Submit");
+      console.log(values);
+      setDonationLoading(true);
+      setDonationError(null);
+      if (donor.creditAmount >= values.donation) {
+        createDonation({
+          variables: {
+            field: {
+              data: {
+                donor: donor.id,
+                project: projectID,
+                amount: values.donation,
+              },
+            },
+          },
+        });
+      } else {
+        setDonationError("Please add more credits in your wallet first");
+        setDonationLoading(false);
+      }
+    },
+    validationSchema: Yup.object().shape({
+      donation: Yup.number()
+        .min(10, "Minimumum donation size is 10 rupees")
+        .required("Please enter donation amount"),
+    }),
+  });
+
+  const handleDonation = () => {
+    if (donor["id"]) {
+      setDonations(true);
+    } else router.push("/signin");
+  };
   if (error) {
     return <Error statusCode={404} />;
   }
@@ -150,9 +248,17 @@ function Project({ projectID }) {
                 <Grid item md={12}>
                   <img
                     src={`${process.env.PLAIN_URL}${data.project.titleImage.url}`}
+                    onClick={() => {
+                      setToggler(!toggler);
+                      setImageSlider(
+                        data.project.relatedImages.length
+                          ? data.project.relatedImages.length + 1
+                          : 1
+                      );
+                    }}
                     height="400px"
                     width="100%"
-                    style={{ borderRadius: 4 }}
+                    style={{ borderRadius: 4, cursor: "pointer" }}
                   />
                 </Grid>
                 <Grid
@@ -162,12 +268,17 @@ function Project({ projectID }) {
                   spacing={2}
                   style={{ paddingRight: 0, margin: 0 }}
                 >
-                  {data.project.relatedImages.map((item) => {
+                  {data.project.relatedImages.map((item, index) => {
                     return (
                       <Grid item md={2} key={item.id}>
                         <img
                           src={`${process.env.PLAIN_URL}${item.url}`}
+                          onClick={() => {
+                            setToggler(!toggler);
+                            setImageSlider(index + 1);
+                          }}
                           style={{
+                            cursor: "pointer",
                             height: "100px",
                             borderRadius: 4,
                             objectFit: "cover",
@@ -179,6 +290,21 @@ function Project({ projectID }) {
                     );
                   })}
                 </Grid>
+                <FsLightbox
+                  toggler={toggler}
+                  type="image"
+                  sources={
+                    data
+                      ? data.project.relatedImages
+                          .map((pic) => `${process.env.PLAIN_URL}${pic.url}`)
+                          .concat(
+                            `${process.env.PLAIN_URL}${data.project.titleImage.url}`
+                          )
+                      : []
+                  }
+                  slide={imageSlide}
+                />
+
                 <Grid
                   container
                   item
@@ -193,11 +319,15 @@ function Project({ projectID }) {
                     />
                   </Grid>
                   <Grid item md={11}>
-                    <Heading
-                      content={`${data.project.organization.organizationName} is organizing this fundraiser`}
-                      style={{ margin: "0px" }}
-                      as="h3"
-                    />
+                    <a
+                      href={`http://localhost:3000/Organizations/${data.project.organization.id}`}
+                    >
+                      <Heading
+                        content={`${data.project.organization.organizationName} is organizing this fundraiser`}
+                        style={{ margin: "0px" }}
+                        as="h3"
+                      />
+                    </a>
                   </Grid>
                   <Grid item md={12}>
                     <Divider />
@@ -236,7 +366,6 @@ function Project({ projectID }) {
                     })}
                   </Grid>
                 </Grid>
-
                 <Grid item md={12}>
                   <Paper>
                     <Box width={1} p={2}>
@@ -292,57 +421,114 @@ function Project({ projectID }) {
                       />
                     </DonationProgressbar>
 
-                    <a href="/project">
-                      <Button
-                        title="DONATE NOW"
-                        variant="textButton"
-                        style={{
-                          marginTop: "18px",
+                    <Button
+                      title="DONATE NOW"
+                      variant="textButton"
+                      onClick={handleDonation}
+                      style={{
+                        marginTop: "18px",
 
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          minWidth: "100%",
-                          height: "auto",
-                          border: "0",
-                          fontSize: "15px",
-                          fontWeight: "700",
-                          borderRadius: "10px",
-                          cursor: "pointer",
-                          color: "#FFFFFF",
-                          backgroundColor: "#05B890",
-                          position: "relative",
-                          overflow: "hidden",
-                          zIndex: "1",
-                        }}
-                      />
-                    </a>
-                    <a href="/project">
-                      <Button
-                        title="SHARE"
-                        variant="outlined"
-                        style={{
-                          marginTop: "5px",
-                          marginBottom: "23px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          minWidth: "100%",
-                          height: "auto",
-                          border: "1",
-                          borderColor: "#3E2672",
-                          fontSize: "15px",
-                          fontWeight: "700",
-                          borderRadius: "10px",
-                          cursor: "pointer",
-                          color: "#060F1E",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: "100%",
+                        height: "auto",
+                        border: "0",
+                        fontSize: "15px",
+                        fontWeight: "700",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        color: "#FFFFFF",
+                        backgroundColor: "#05B890",
+                        position: "relative",
+                        overflow: "hidden",
+                        zIndex: "1",
+                      }}
+                    />
+                    {donations ? (
+                      <Dialog
+                        open={donations}
+                        onClose={() => setDonations(false)}
+                        aria-labelledby="form-dialog-title"
+                      >
+                        <DialogTitle id="form-dialog-title">
+                          Donate Now
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Donate to your favourite project
+                          </DialogContentText>
 
-                          position: "relative",
-                          overflow: "hidden",
-                          zIndex: "1",
-                        }}
+                          <TextField
+                            type="number"
+                            autoFocus
+                            name="donation"
+                            value={values.donation}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.donation && touched.donation}
+                            helperText={
+                              errors.donation && touched.donation
+                                ? errors.donation
+                                : null
+                            }
+                            label="Donation"
+                            fullWidth
+                          />
+                          {donationError ? (
+                            <Text content={donationError} />
+                          ) : null}
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            onClick={() => setDonations(false)}
+                            title="Cancel"
+                            variant="extendedFab"
+                          />
+                          <Button
+                            title="Submit"
+                            variant="extendedFab"
+                            onClick={handleSubmit}
+                            disabled={donationLoading}
+                            isLoading={donationLoading}
+                          />
+                        </DialogActions>
+                      </Dialog>
+                    ) : null}
+
+                    {openShare ? (
+                      <ShareModal
+                        status={openShare}
+                        modalClose={() => setOpenShare(false)}
+                        url={`http://localhost:3000/projects/${data.project.id}`}
+                        heading={`Share this project`}
                       />
-                    </a>
+                    ) : null}
+                    <Button
+                      title="SHARE"
+                      variant="outlined"
+                      onClick={() => setOpenShare(true)}
+                      style={{
+                        marginTop: "5px",
+                        marginBottom: "23px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: "100%",
+                        height: "auto",
+                        border: "1",
+                        borderColor: "#3E2672",
+                        fontSize: "15px",
+                        fontWeight: "700",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        color: "#060F1E",
+
+                        position: "relative",
+                        overflow: "hidden",
+                        zIndex: "1",
+                      }}
+                    />
 
                     <Grid container alignItems="center" spacing={1}>
                       <Grid item md="12" style={{ paddingTop: "0px" }}>

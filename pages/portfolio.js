@@ -89,6 +89,71 @@ export default () => {
       price: "",
     });
   };
+  const [createPortfolio] = useMutation(CREATE_PORTFOLIO, {
+    onCompleted: (data) => {
+      console.log(data, "Portfolio Completed");
+
+      setPortfolio(false);
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          ...donor,
+          portfolios: donor.portfolios.push(data.createPortfolio.portfolio),
+        },
+      });
+      setCreateError("Review Added succesfully!");
+      setCreateLoading(false);
+      handleReset();
+    },
+    onError: (error) => {
+      console.log(error);
+      setCreateError("Sorry an error occurred. Please try again!");
+    },
+  });
+  const schemas = [
+    {
+      paymentSize: Yup.number().required(
+        "Please enter a donation paymentSize."
+      ),
+      period: Yup.string().required("Please enter the period."),
+    },
+  ];
+
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      paymentSize: 0,
+      period: "",
+    },
+    onSubmit: (values) => {
+      console.log("Portfolio => On Submit");
+      console.log(values.period, "Period:");
+      setCreateLoading(true);
+      setCreateError(null);
+      createPortfolio({
+        variables: {
+          field: {
+            data: {
+              paymentSize: values.paymentSize,
+              period: values.period,
+              donor: donor ? donor.id : null,
+              organization: organizationID,
+              paymentDate: moment().format("YYYY-MM-DD"),
+            },
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape(schemas[0]),
+  });
 
   return (
     <ThemeProvider theme={charityTheme}>

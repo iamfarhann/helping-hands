@@ -311,12 +311,14 @@ export default () => {
                           </ListItem>
                         </Link>
                         <Divider />
-                        <ListItem button component="a" href="/pastProject">
-                          <ListItemIcon>
-                            <AssessmentIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Past Projects" />
-                        </ListItem>
+                        <Link href="/pastProject">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AssessmentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Past Projects" />
+                          </ListItem>
+                        </Link>
                         <Divider />
                         <ListItem button onClick={handleLogout}>
                           <ListItemIcon>
