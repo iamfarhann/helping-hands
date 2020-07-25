@@ -64,12 +64,14 @@ import { useData, useDispatchUser } from "../lib/userData";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation, useLazyQuery } from "@apollo/react-hooks";
 import { UPDATE_DONOR } from "../lib/mutations";
+import { GET_PROJECTS } from "../lib/queries";
 import { DropzoneArea } from "material-ui-dropzone";
 import axios from "axios";
 import TagSelection from "../containers/Charity/Tags/tagSelection";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
 import ProjectCard from "../containers/Charity/Project";
 
 const useStyles = makeStyles((theme) => ({
@@ -96,7 +98,23 @@ export default () => {
 
     setChecked(newChecked);
   };
+  const [getProjects, { data, loading, error, refetch }] = useLazyQuery(
+    GET_PROJECTS
+  );
 
+  useEffect(() => {
+    console.log(data);
+    if (!data) {
+      getProjects({
+        variables: {
+          where: {},
+          sort: "createdAt:desc",
+          limit: 10,
+          start: 0,
+        },
+      });
+    }
+  }, [data]);
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
@@ -125,61 +143,57 @@ export default () => {
             <DrawerSection />
           </DrawerProvider>
           <ContentWrapper>
-            <Grid
-              container
+            <Container
+              maxWidth="lg"
               style={{
-                maxWidth: "1170px",
-                minHeight: "100vh",
-                paddingTop: "140px",
-                marginLeft: "170px",
+                marginTop: "140px",
+                height: "100%",
+                paddingBottom: "40px",
               }}
             >
-              <Grid item md={3}>
-                <Paper style={{ height: "90vh" }}>
-                  <Container style={{ padding: "20px" }}>
-                    <div className={classes.root}>
-                      <Text
-                        content="Explore projects by categories:"
-                        style={{ fontSize: "20px" }}
-                      />
+              <Grid container alignItems="flex-start" spacing={4}>
+                <Grid item md={3}>
+                  <Paper style={{ height: "90vh" }}>
+                    <Container style={{ padding: "20px" }}>
+                      <div className={classes.root}>
+                        <Text
+                          content="Explore projects by categories:"
+                          style={{ fontSize: "20px" }}
+                        />
+                        <Checkbox checked={true} />
+                      </div>
+                    </Container>
+                  </Paper>
+                </Grid>
 
-                      <List className={classes.root}>
-                        {[0, 1, 2, 3].map((value) => {
-                          //const labelId = `checkbox-list-label-${value}`;
-
-                          return (
-                            <Checkbox checked={true} />
-                            // <div id="my_checkboxes">
-                            //   <ListItem
-                            //     key={value}
-                            //     role={undefined}
-                            //     dense
-                            //     button
-                            //     onClick={handleToggle(value)}
-                            //   >
-                            //     <ListItemIcon>
-                            //       <Checkbox
-                            //         edge="start"
-                            //         checked={checked.indexOf(value) !== -1}
-                            //         tabIndex={-1}
-                            //         disableRipple
-                            //         inputProps={{ "aria-labelledby": labelId }}
-                            //       />
-                            //     </ListItemIcon>
-                            //     <ListItemText
-                            //       id={labelId}
-                            //       primary={`Line item ${value + 1}`}
-                            //     />
-                            //   </ListItem>
-                            // </div>
-                          );
-                        })}
-                      </List>
-                    </div>
-                  </Container>
-                </Paper>
+                {data ? (
+                  <Grid container item md={9} spacing={4}>
+                    {data.projects.map((project) => {
+                      return (
+                        <Grid item md={4} key={project.id}>
+                          <Paper>
+                            <ProjectCard project={project} />
+                          </Paper>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                ) : (
+                  <Grid
+                    container
+                    item
+                    md={8}
+                    justify="center"
+                    alignItem="center"
+                    spacing={4}
+                  >
+                    <Grid item md={2}>
+                      <CircularProgress color="secondary" />
+                    </Grid>
+                  </Grid>
+                )}
               </Grid>
-            </Grid>
+            </Container>
           </ContentWrapper>
           <Footer />
         </CharityWrapper>

@@ -82,9 +82,7 @@ const FundraiserSection = ({ project }) => {
             )}`}
           />
           <Divider style={{ marginBottom: "5px" }} />
-          <Text
-            content={`Target Amount: ${data.project.targetAmount} Rupees`}
-          />
+          <Text content={`Target Amount: ${data.project.targetAmount} Rs.`} />
           <Divider style={{ marginBottom: "5px" }} />
           <Text content={`status: ${data.project.status}`} />
           <Divider style={{ marginBottom: "5px" }} />
