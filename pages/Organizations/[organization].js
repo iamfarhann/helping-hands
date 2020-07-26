@@ -134,6 +134,8 @@ function Organization({ organizationID }) {
         payload: {
           ...donor,
           portfolios: donor.portfolios.concat(data.createPortfolio.portfolio),
+          creditAmount:
+            donor.creditAmount - data.updatePortfolio.portfolio.paymentSize,
         },
       });
       setCreateError("Review Added succesfully!");
@@ -173,19 +175,27 @@ function Organization({ organizationID }) {
       console.log(values.period, "Period:");
       setCreateLoading(true);
       setCreateError(null);
-      createPortfolio({
-        variables: {
-          field: {
-            data: {
-              paymentSize: values.paymentSize,
-              period: values.period,
-              donor: donor ? donor.id : null,
-              organization: organizationID,
-              paymentDate: moment().format("YYYY-MM-DD"),
+
+      if (donor.creditAmount >= values.paymentSize) {
+        createPortfolio({
+          variables: {
+            field: {
+              data: {
+                paymentSize: parseInt(values.paymentSize),
+                period: values.period,
+                donor: donor ? donor.id : null,
+                organization: organizationID,
+                paymentDate: moment().format("YYYY-MM-DD"),
+              },
             },
           },
-        },
-      });
+        });
+      } else {
+        setCreateLoading(false);
+        setCreateError(
+          "Insufficent balance. Please refill your account & then add to portfolio"
+        );
+      }
     },
     validationSchema: Yup.object().shape(schemas[0]),
   });
@@ -399,6 +409,11 @@ function Organization({ organizationID }) {
                             {/* {donationError ? (
                             <Text content={donationError} />
                           ) : null} */}
+                            {createError ? (
+                              <Box width="100%" p={2}>
+                                <Text content={createError} />
+                              </Box>
+                            ) : null}
                           </DialogContent>
                           <DialogActions>
                             <Button

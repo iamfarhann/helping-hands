@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AlignItemsList() {
+export default function AlignItemsList({ refetchNow, setRefetchNow }) {
   const classes = useStyles();
   const donor = useData();
   const dispatch = useDispatchUser();
@@ -49,6 +49,7 @@ export default function AlignItemsList() {
     fetchPolicy: "cache-and-network",
     //skip: !project,
   });
+
   const [deletePortfolio] = useMutation(DELETE_PORTFOLIO, {
     onCompleted: (data) => {
       console.log(data, "on complete deletion");
@@ -67,6 +68,13 @@ export default function AlignItemsList() {
       console.log(error, "Error @ delete portfolio");
     },
   });
+
+  useEffect(() => {
+    if (refetchNow) {
+      refetch();
+      setRefetchNow(false);
+    }
+  }, [refetchNow]);
 
   const handleDeletePortfolio = (pID) => {
     console.log("Handle Delete Portfolio", pID);

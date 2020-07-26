@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import Image from "../common/src/components/Image";
@@ -43,6 +43,7 @@ import TextField from "@material-ui/core/TextField";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import PasswordField from "material-ui-password-field";
 
+import Text from "../common/src/components/Text";
 import OrganizationList from "../common/src/components/HelpingHands/OrganizationList";
 import InputGroup from "../common/src/components/InputGroup";
 import RadioGroup from "../common/src/components/RadioGroup";
@@ -52,7 +53,21 @@ import SectionWrapper, {
   DonationForm,
   DonateButton,
 } from "../containers/Charity/donateSection/donateSection.style";
+
 import { paymentPolicy, currencyOptions } from "../common/src/data/Charity";
+
+import { useData, useDispatchUser } from "../lib/userData";
+import { GET_ORGANIZATION_NAMES } from "../lib/queries";
+
+import { CREATE_PORTFOLIO, UPDATE_PORTFOLIO } from "../lib/mutations";
+
+import { useQuery, useMutation } from "@apollo/react-hooks";
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import CircularProgress from "@material-ui/core/CircularProgress";
+import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -67,11 +82,29 @@ function ListItemLink(props) {
 
 export default () => {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "Shaukat Khanum",
-    policy: "oneTime",
-  });
+  const paymentPolicy = [
+    {
+      id: 1,
+      title: "One Time",
+      value: "once",
+      text: "One Time donation given",
+    },
+    {
+      id: 2,
+      title: "Ongoing",
+      value: "monthly",
+      text: "Everymonth donation given",
+    },
+  ];
+
+  const dispatch = useDispatchUser();
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState("");
+
+  const [portfolio, setPortfolio] = useState(false);
+
+  const [refetchNow, setRefetchNow] = useState(false);
+  const donor = useData();
 
   const handleFormData = (value, name) => {
     setState({
@@ -89,6 +122,8 @@ export default () => {
       price: "",
     });
   };
+  const { data, loading, error, refetch } = useQuery(GET_ORGANIZATION_NAMES);
+
   const [createPortfolio] = useMutation(CREATE_PORTFOLIO, {
     onCompleted: (data) => {
       console.log(data, "Portfolio Completed");
@@ -98,10 +133,37 @@ export default () => {
         type: "UPDATE",
         payload: {
           ...donor,
-          portfolios: donor.portfolios.push(data.createPortfolio.portfolio),
+          portfolios: donor.portfolios.concat(data.createPortfolio.portfolio),
+          creditAmount:
+            donor.creditAmount - data.updatePortfolio.portfolio.paymentSize,
         },
       });
-      setCreateError("Review Added succesfully!");
+      setRefetchNow(true);
+      setCreateError("Added to portfolio succesfully!");
+      setCreateLoading(false);
+      handleReset();
+    },
+    onError: (error) => {
+      console.log(error);
+      setCreateError("Sorry an error occurred. Please try again!");
+    },
+  });
+  const [updatePortfolio] = useMutation(UPDATE_PORTFOLIO, {
+    onCompleted: (data) => {
+      console.log(data, "Portfolio UPDATED");
+
+      setPortfolio(false);
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          ...donor,
+          portfolios: donor.portfolios.concat(data.updatePortfolio.portfolio),
+          creditAmount:
+            donor.creditAmount - data.updatePortfolio.portfolio.paymentSize,
+        },
+      });
+      setRefetchNow(true);
+      setCreateError("Portfolio updated succesfully!");
       setCreateLoading(false);
       handleReset();
     },
@@ -112,9 +174,10 @@ export default () => {
   });
   const schemas = [
     {
-      paymentSize: Yup.number().required(
-        "Please enter a donation paymentSize."
-      ),
+      paymentSize: Yup.number()
+        .min(10, "Please enter a value greater than Rs. 10")
+        .required("Please enter a valid donation size."),
+      organization: Yup.string(),
       period: Yup.string().required("Please enter the period."),
     },
   ];
@@ -130,31 +193,73 @@ export default () => {
     setFieldValue,
   } = useFormik({
     initialValues: {
-      paymentSize: 0,
-      period: "",
+      paymentSize: 10,
+      period: "once",
+      organization: "",
     },
     onSubmit: (values) => {
-      console.log("Portfolio => On Submit");
-      console.log(values.period, "Period:");
       setCreateLoading(true);
       setCreateError(null);
-      createPortfolio({
-        variables: {
-          field: {
-            data: {
-              paymentSize: values.paymentSize,
-              period: values.period,
-              donor: donor ? donor.id : null,
-              organization: organizationID,
-              paymentDate: moment().format("YYYY-MM-DD"),
+      if (donor.creditAmount >= values.paymentSize) {
+        if (
+          donor.portfolios.filter(
+            (portfolio) =>
+              portfolio.organization.organizationName == values.organization
+          ).length
+        ) {
+          console.log("if block");
+          updatePortfolio({
+            variables: {
+              field: {
+                data: {
+                  paymentSize: parseInt(values.paymentSize),
+                  period: values.period,
+                  paymentDate: moment().format("YYYY-MM-DD"),
+                },
+                where: {
+                  id: donor.portfolios.filter(
+                    (portfolio) =>
+                      portfolio.organization.organizationName ==
+                      values.organization
+                  )[0].id,
+                },
+              },
             },
-          },
-        },
-      });
+          });
+        } else {
+          createPortfolio({
+            variables: {
+              field: {
+                data: {
+                  paymentSize: parseInt(values.paymentSize),
+                  period: values.period,
+                  donor: donor ? donor.id : null,
+                  organization: data.organizations.filter(
+                    (organization) =>
+                      organization.organizationName == values.organization
+                  )[0].id,
+                  paymentDate: moment().format("YYYY-MM-DD"),
+                },
+              },
+            },
+          });
+        }
+      } else {
+        setCreateLoading(false);
+        setCreateError(
+          "Insufficent balance. Please refill your account & then add to portfolio"
+        );
+      }
     },
+
     validationSchema: Yup.object().shape(schemas[0]),
   });
 
+  useEffect(() => {
+    if (data) {
+      setFieldValue("organization", data.organizations[0].organizationName);
+    }
+  }, [data]);
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
@@ -242,32 +347,68 @@ export default () => {
                     >
                       <InputGroup
                         inputType="number"
-                        placeholder="100.00"
-                        inputValue={state.price}
+                        placeholder="0"
+                        inputValue={values.paymentSize}
                         inputOnChange={(e) =>
-                          handleFormData(e.target.value, "price")
+                          setFieldValue("paymentSize", e.target.value)
                         }
-                        currency="Akhuwat "
-                        selectedValue={state.currency}
-                        selectOptions={currencyOptions}
-                        selectOnUpdate={(value) =>
-                          handleFormData(value, "currency")
+                        currency={
+                          data ? data.organizations[0].organizationName : ""
                         }
+                        selectedValue={values.organization}
+                        selectOptions={
+                          data
+                            ? data.organizations.map((organization) => {
+                                return {
+                                  id: organization.id,
+                                  title: organization.organizationName,
+                                  value: organization.organizationName,
+                                };
+                              })
+                            : []
+                        }
+                        selectOnUpdate={(value) => {
+                          console.log("value:", value);
+                          setFieldValue("organization", value);
+                        }}
                       />
+                      {errors.paymentSize ? (
+                        <Box width="100%" p={2}>
+                          <Text content={errors.paymentSize} />
+                        </Box>
+                      ) : null}
                       <RadioGroup
-                        name="radioGroup"
-                        value={state.policy}
+                        name="period"
+                        value={paymentPolicy.id}
                         items={paymentPolicy}
-                        onUpdate={(value) => handleFormData(value, "policy")}
+                        onUpdate={(value) => setFieldValue("period", value)}
                       />
-                      <DonateButton type="submit">
+                      {createError ? (
+                        <Box width="100%" p={2}>
+                          <Text
+                            style={{ color: "orange" }}
+                            content={createError}
+                          />
+                        </Box>
+                      ) : null}
+                      <DonateButton type="submit" onClick={handleSubmit}>
                         Add to protfolio
-                        <Image src={heartImage} alt="Charity Landing" />
+                        {createLoading ? (
+                          <CircularProgress
+                            style={{ marginLeft: "10px", color: "#FFFFFF" }}
+                            size={20}
+                          />
+                        ) : (
+                          <Image src={heartImage} alt="Charity Landing" />
+                        )}
                       </DonateButton>
                     </DonationForm>
                     <Heading content="My Organizations" color="#05B890" />{" "}
                     <Divider />
-                    <OrganizationList />
+                    <OrganizationList
+                      refetchNow={refetchNow}
+                      setRefetchNow={setRefetchNow}
+                    />
                   </Container>
                 </Paper>
               </Grid>

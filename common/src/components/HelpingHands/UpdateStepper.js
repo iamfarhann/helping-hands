@@ -13,6 +13,9 @@ import Heading from "../Heading";
 import { GET_PROJECT_UPDATES } from "../../../../lib/queries";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import moment from "moment";
+
+import FsLightbox from "fslightbox-react";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -84,6 +87,10 @@ export default function UpdateStepper({ project }) {
     setActiveStep(0);
   };
 
+  const [toggler, setToggler] = useState(false);
+  const [coverToggler, setCoverToggler] = useState(false);
+  const [imageSlide, setImageSlider] = useState(0);
+
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -102,13 +109,34 @@ export default function UpdateStepper({ project }) {
             </StepLabel>
             <StepContent>
               <Text color="#060F1E" content={updateData.update} />
-              {updateData.images.map((item) => {
+              <FsLightbox
+                toggler={toggler}
+                type="image"
+                sources={
+                  updateData
+                    ? updateData.images.map(
+                        (pic) => `${process.env.PLAIN_URL}${pic.url}`
+                      )
+                    : []
+                }
+                slide={imageSlide}
+              />
+              {updateData.images.map((item, index) => {
                 return (
                   <img
+                    onClick={() => {
+                      setToggler(!toggler);
+                      setImageSlider(index + 1);
+                    }}
                     src={`${process.env.PLAIN_URL}${item.url}`}
-                    height="100px"
-                    width="100px"
-                    style={{ borderRadius: 4, objectFit: "cover", margin: 2 }}
+                    style={{
+                      borderRadius: 4,
+                      objectFit: "cover",
+                      margin: 2,
+                      height: "80px",
+                      width: "80px",
+                      cursor: "pointer",
+                    }}
                   />
                 );
               })}
