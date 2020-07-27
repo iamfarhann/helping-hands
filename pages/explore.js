@@ -66,7 +66,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/react-hooks";
 import { UPDATE_DONOR } from "../lib/mutations";
-import { GET_PROJECTS } from "../lib/queries";
+import { GET_PROJECTS, GET_TAG_NAMES } from "../lib/queries";
 import { DropzoneArea } from "material-ui-dropzone";
 import axios from "axios";
 import TagSelection from "../containers/Charity/Tags/tagSelection";
@@ -74,6 +74,9 @@ import TagSelection from "../containers/Charity/Tags/tagSelection";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ProjectCard from "../containers/Charity/Project";
 
+import Chip from "@material-ui/core/Chip";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import _ from "lodash";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -84,8 +87,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
-
+  const [selectedTag, setSelectedTag] = useState([]);
+  const [fetched, setFetch] = useState(true);
+  const {
+    data: allTags,
+    loading: tagLoading,
+    error: tagError,
+    refetch: tagRefetch,
+  } = useQuery(GET_TAG_NAMES);
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -104,7 +113,7 @@ export default () => {
 
   useEffect(() => {
     console.log(data);
-    if (!data) {
+    if (!data && fetched) {
       getProjects({
         variables: {
           where: {},
@@ -113,14 +122,40 @@ export default () => {
           start: 0,
         },
       });
+      setFetch(false);
     }
   }, [data]);
+  const handleFilter = () => {
+    //console.log("Handle Filter:", selectedTag,{});
+
+    if (selectedTag.length) {
+      console.log("if");
+      getProjects({
+        variables: {
+          where: { tags_in: selectedTag.map((tag) => tag.id) },
+          sort: "createdAt:desc",
+          limit: null,
+          start: 0,
+        },
+      });
+    } else {
+      console.log("else");
+      getProjects({
+        variables: {
+          where: {},
+          sort: "createdAt:desc",
+          limit: null,
+          start: 0,
+        },
+      });
+    }
+  };
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
         {/* Start charity head section */}
         <Head>
-          <title>My Account | Esaar</title>
+          <title>Explore Projects | Esaar</title>
           <meta name="Description" content="React next landing page" />
           <meta name="theme-color" content="#FCF22B" />
           <meta
@@ -160,7 +195,46 @@ export default () => {
                           content="Explore projects by categories:"
                           style={{ fontSize: "20px" }}
                         />
-                        <Checkbox checked={true} />
+
+                        <Autocomplete
+                          size="small"
+                          multiple
+                          id="tags-outlined"
+                          options={
+                            allTags
+                              ? allTags.tags.map((tag) => {
+                                  return {
+                                    id: tag.id,
+                                    value: tag.id,
+                                    label: tag.name,
+                                  };
+                                })
+                              : []
+                          }
+                          getOptionLabel={(option) => option.label}
+                          value={selectedTag}
+                          onChange={(event, newValue) => {
+                            setSelectedTag(_.uniqBy(newValue, "id"));
+                          }}
+                          //defaultValue={[top100Films[13]]}
+                          filterSelectedOptions
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="outlined"
+                              label="Select Categories"
+                              placeholder="Categories"
+                            />
+                          )}
+                        />
+                        <Box display="flex" py={2} justifyContent="center">
+                          <Button
+                            title="Filter"
+                            onClick={handleFilter}
+                            variant="extendedFab"
+                            fullWidth
+                          />
+                        </Box>
                       </div>
                     </Container>
                   </Paper>
