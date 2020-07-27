@@ -17,24 +17,47 @@ import BannerWrapper, {
 
 import { bannerSlides } from "../../../common/src/data/Charity";
 
+import { useData, useDispatchUser } from "../../../lib/userData";
+
 const BannerSection = () => {
   const glideOptions = {
     type: "carousel",
     perView: 1,
     gap: 0,
   };
-
+  const user = useData();
   return (
     <BannerWrapper>
       <LeftBar text="SCROLL DOWN" offset={81} sectionId="#feature" />
       <ContentWrapper>
         <TextArea>
-          <Link href="/Projects/5f0b4ddaa9568904e4b6088a">
-            <HighlightedText className="highlighted_text">
-              <strong>Recommended</strong> Explore projects which matter to you!
-              <Icon icon={chevronRight} />
-            </HighlightedText>
-          </Link>
+          {user["id"] ? (
+            user.user.role.name == "Donor" ? (
+              <Link href="/recommended">
+                <HighlightedText className="highlighted_text">
+                  <strong>Recommended</strong> Explore projects which matter to
+                  you!
+                  <Icon icon={chevronRight} />
+                </HighlightedText>
+              </Link>
+            ) : (
+              <Link href="/explore">
+                <HighlightedText className="highlighted_text">
+                  <strong>Recommended</strong> Explore projects which matter to
+                  you!
+                  <Icon icon={chevronRight} />
+                </HighlightedText>
+              </Link>
+            )
+          ) : (
+            <Link href="/explore">
+              <HighlightedText className="highlighted_text">
+                <strong>Recommended</strong> Explore projects which matter to
+                you!
+                <Icon icon={chevronRight} />
+              </HighlightedText>
+            </Link>
+          )}
           <Heading
             content="Bring a smile to
           their faces."
@@ -46,10 +69,7 @@ const BannerSection = () => {
           />
           <Text content="   Explore projects, view rankings of charity organizations, donate with just a click; all in all, in one place" />
 
-          <Link
-            href={`/projects/[project]`}
-            as={`/projects/5f0b4ddaa9568904e4b6088a`}
-          >
+          <Link href="/explore">
             <a className="learn__more-btn">
               <span className="hyphen" />
               <span className="btn_text">Explore Our Project</span>

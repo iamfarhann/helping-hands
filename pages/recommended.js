@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
+  const donor = useData();
   const [selectedTag, setSelectedTag] = useState([]);
   const [fetched, setFetch] = useState(true);
   const {
@@ -113,18 +114,24 @@ export default () => {
 
   useEffect(() => {
     console.log(data);
-    if (!data && fetched) {
+    if (!data && donor["id"]) {
+      let tags = [];
+      donor.preferredTags.forEach((tag) => {
+        tags.push(tag.id);
+      });
+      donor.visitedTags.forEach((tag) => {
+        tags.push(tag.id);
+      });
       getProjects({
         variables: {
-          where: {},
+          where: { tags_in: _.uniq(tags) },
           sort: "createdAt:desc",
-          limit: 10,
+          limit: null,
           start: 0,
         },
       });
-      setFetch(false);
     }
-  }, [data]);
+  }, [data, donor]);
   const handleFilter = () => {
     //console.log("Handle Filter:", selectedTag,{});
 
@@ -155,7 +162,7 @@ export default () => {
       <Fragment>
         {/* Start charity head section */}
         <Head>
-          <title>Explore Projects | Esaar</title>
+          <title>Recommended Projects | Esaar</title>
           <meta name="Description" content="React next landing page" />
           <meta name="theme-color" content="#FCF22B" />
           <meta
@@ -198,70 +205,18 @@ export default () => {
               </Grid>
               <Grid item style={{ marginBottom: "20px" }} md={12}>
                 <Heading
-                  content="Explore Fundraisers"
+                  content="Recommended Projects"
                   as="h1"
                   color="secondary"
                 />
               </Grid>
+
               <Grid container alignItems="flex-start" spacing={4}>
-                <Grid item md={3}>
-                  <Paper style={{ height: "90vh" }}>
-                    <Container style={{ padding: "20px" }}>
-                      <div className={classes.root}>
-                        <Text
-                          content="Explore projects by categories:"
-                          style={{ fontSize: "20px" }}
-                        />
-
-                        <Autocomplete
-                          size="small"
-                          multiple
-                          id="tags-outlined"
-                          options={
-                            allTags
-                              ? allTags.tags.map((tag) => {
-                                  return {
-                                    id: tag.id,
-                                    value: tag.id,
-                                    label: tag.name,
-                                  };
-                                })
-                              : []
-                          }
-                          getOptionLabel={(option) => option.label}
-                          value={selectedTag}
-                          onChange={(event, newValue) => {
-                            setSelectedTag(_.uniqBy(newValue, "id"));
-                          }}
-                          //defaultValue={[top100Films[13]]}
-                          filterSelectedOptions
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              variant="outlined"
-                              label="Select Categories"
-                              placeholder="Categories"
-                            />
-                          )}
-                        />
-                        <Box display="flex" py={2} justifyContent="center">
-                          <Button
-                            title="Filter"
-                            onClick={handleFilter}
-                            variant="extendedFab"
-                            fullWidth
-                          />
-                        </Box>
-                      </div>
-                    </Container>
-                  </Paper>
-                </Grid>
-
                 {data ? (
-                  <Grid container item md={9} spacing={4}>
+                  <Grid container item md={12} spacing={4}>
                     {data.projects.map((project) => {
                       return (
-                        <Grid item md={4} key={project.id}>
+                        <Grid item md={3} key={project.id}>
                           <Paper>
                             <ProjectCard project={project} />
                           </Paper>
@@ -270,18 +225,15 @@ export default () => {
                     })}
                   </Grid>
                 ) : (
-                  <Grid
-                    container
-                    item
-                    md={8}
-                    justify="center"
-                    alignItem="center"
-                    spacing={4}
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    width={1}
+                    style={{ height: "100vh" }}
                   >
-                    <Grid item md={2}>
-                      <CircularProgress color="secondary" />
-                    </Grid>
-                  </Grid>
+                    <CircularProgress color="secondary" />
+                  </Box>
                 )}
               </Grid>
             </Container>
