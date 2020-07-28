@@ -89,6 +89,8 @@ export default () => {
   const classes = useStyles();
   const [selectedTag, setSelectedTag] = useState([]);
   const [fetched, setFetch] = useState(true);
+  const { query } = useRouter();
+
   const {
     data: allTags,
     loading: tagLoading,
@@ -113,18 +115,30 @@ export default () => {
 
   useEffect(() => {
     console.log(data);
-    if (!data && fetched) {
+
+    if (!data && fetched && !query["tag"]) {
       getProjects({
         variables: {
           where: {},
           sort: "createdAt:desc",
-          limit: 10,
+          limit: null,
           start: 0,
         },
       });
       setFetch(false);
     }
-  }, [data]);
+    if (!data && fetched && query["tag"]) {
+      getProjects({
+        variables: {
+          where: { tags_in: [query.tag] },
+          sort: "createdAt:desc",
+          limit: null,
+          start: 0,
+        },
+      });
+      setFetch(false);
+    }
+  }, [data, query]);
   const handleFilter = () => {
     //console.log("Handle Filter:", selectedTag,{});
 

@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Link from "next/link";
 
 const BlogPost = ({ className, thumbUrl, title, excerpt, link }) => {
   // Add all classes to an array
@@ -11,16 +12,17 @@ const BlogPost = ({ className, thumbUrl, title, excerpt, link }) => {
   }
 
   return (
-    <div className={addAllClasses.join(" ")}>
-      <div className="thumbnail">
-        <img src={thumbUrl} alt={title} />
+    <Link href={link}>
+      <div className={addAllClasses.join(" ")} style={{ cursor: "pointer" }}>
+        <div className="thumbnail">
+          <img src={thumbUrl} alt={title} />
+        </div>
+        <div className="content">
+          <h3 className="title">{title}</h3>
+          <p className="excerpt">{excerpt}</p>
+        </div>
       </div>
-      <div className="content">
-        <h3 className="title">{title}</h3>
-        <p className="excerpt">{excerpt}</p>
-        {link && <div className="learn_more">{link}</div>}
-      </div>
-    </div>
+    </Link>
   );
 };
 
