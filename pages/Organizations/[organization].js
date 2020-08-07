@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from "./node_modules/react";
-import Link from "./node_modules/next/link";
+import React, { Fragment, useEffect, useState } from "react";
+import Link from "next/link";
 // import Typography from '@material-ui/core/Typography';
 // import Box from '@material-ui/core/Box';
 import {
@@ -9,10 +9,10 @@ import {
   Grid,
   Paper,
   Divider,
-} from "./node_modules/@material-ui/core";
-import HouseIcon from "./node_modules/@material-ui/icons/House";
-import { borders } from "./node_modules/@material-ui/system";
-import { makeStyles } from "./node_modules/@material-ui/core/styles";
+} from "@material-ui/core";
+import HouseIcon from "@material-ui/icons/House";
+import { borders } from "@material-ui/system";
+import { makeStyles } from "@material-ui/core/styles";
 import ProjectCard from "../../common/src/components/HelpingHands/ProjectCard";
 import Category from "../../common/src/components/HelpingHands/Category";
 import RankingCard from "../../common/src/components/HelpingHands/RankingCard";
@@ -25,9 +25,9 @@ import {
   CharityWrapper,
   ContentWrapper,
 } from "../../containers/Charity/charity.style";
-import Sticky from "./node_modules/react-stickynode";
-import { ThemeProvider } from "./node_modules/styled-components";
-import Head from "./node_modules/next/head";
+import Sticky from "react-stickynode";
+import { ThemeProvider } from "styled-components";
+import Head from "next/head";
 import { ResetCSS } from "../../common/src/assets/css/style";
 import { charityTheme } from "../../common/src/theme/charity";
 import Text from "../../common/src/components/Text";
@@ -50,27 +50,27 @@ import SectionWrapper, {
   ShareList,
   Item,
 } from "../../containers/Charity/FundraiserSection/fundraiserSection.style";
-import CircularProgress from "./node_modules/@material-ui/core/CircularProgress";
-import { useRouter } from "./node_modules/next/router";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useRouter } from "next/router";
 import { useData, useDispatchUser } from "../../lib/userData";
 import { ORGANIZATION_INFO } from "../../lib/queries";
 import { CREATE_PORTFOLIO } from "../../lib/mutations";
-import { useQuery, useMutation } from "./node_modules/@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import Error from "../../containers/Error";
 
-import Dialog from "./node_modules/@material-ui/core/Dialog";
-import DialogActions from "./node_modules/@material-ui/core/DialogActions";
-import DialogContent from "./node_modules/@material-ui/core/DialogContent";
-import DialogContentText from "./node_modules/@material-ui/core/DialogContentText";
-import DialogTitle from "./node_modules/@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import RadioGroup from "../../common/src/components/RadioGroup";
-import TextField from "./node_modules/@material-ui/core/TextField";
+import TextField from "@material-ui/core/TextField";
 
-import { useFormik } from "./node_modules/formik";
-import * as Yup from "./node_modules/yup";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-import moment from "./node_modules/moment";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {

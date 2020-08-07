@@ -8,12 +8,12 @@ import Tab, { Panel } from "../../../common/src/components/Tabs";
 import SectionWrapper, { ContentWrapper } from "./branchSection.style";
 
 import { branchData } from "../../../common/src/data/Charity";
-
+import ArrowRightAltIcon from "@material-ui/icons/ArrowForward";
 import { useData, useDispatchUser } from "../../../lib/userData";
 import { GET_ORGANIZATIONS } from "../../../lib/queries";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import _ from "lodash";
-
+import { Box } from "@material-ui/core";
 const BranchSection = () => {
   const { data, loading, error, refetch } = useQuery(GET_ORGANIZATIONS, {
     variables: {
@@ -51,7 +51,7 @@ const BranchSection = () => {
                         <Image
                           src={`${process.env.PLAIN_URL}${item.coverImage.url}`}
                           alt={`${item.organizationName} cover image`}
-                          style={{ height: "500px" }}
+                          style={{ height: "540px" }}
                         />
                       </div>
                     </Fade>
@@ -69,6 +69,27 @@ const BranchSection = () => {
                           <span className="btn_text">{`SEE MORE OF OUR IMPACT`}</span>
                         </a>
                       </Link>
+                      <Box
+                        width={1}
+                        pt={3}
+                        display="flex"
+                        justifyContent="flex-start"
+                        alignItem="center"
+                      >
+                        <Link href={`/allOrganizations`}>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            style={{ cursor: "pointer" }}
+                          >
+                            <ArrowRightAltIcon style={{ color: "white" }} />
+
+                            <span style={{ color: "white" }}>
+                              See All Organizations
+                            </span>
+                          </Box>
+                        </Link>
+                      </Box>
                     </div>
                   </ContentWrapper>
                 </Panel>
