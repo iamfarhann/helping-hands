@@ -69,7 +69,7 @@ import { useRouter } from "next/router";
 import { useData, useDispatchUser } from "../../lib/userData";
 import { GET_PROJECT } from "../../lib/queries";
 
-import { CREATE_DONATION } from "../../lib/mutations";
+import { CREATE_DONATION, UPDATE_DONOR } from "../../lib/mutations";
 
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Error from "../../containers/Error";
@@ -88,7 +88,7 @@ import TextField from "@material-ui/core/TextField";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import _ from "lodash";
 import FsLightbox from "fslightbox-react";
 
 function Project({ projectID }) {
@@ -99,7 +99,7 @@ function Project({ projectID }) {
   const [donationError, setDonationError] = useState("");
   const dispatch = useDispatchUser();
   const donor = useData();
-
+  const [updated, setUpdated] = useState(false);
   const [toggler, setToggler] = useState(false);
   const [coverToggler, setCoverToggler] = useState(false);
   const [imageSlide, setImageSlider] = useState(0);
@@ -108,9 +108,41 @@ function Project({ projectID }) {
     variables: { id: projectID },
     skip: !projectID,
   });
+  const [updateDonor] = useMutation(UPDATE_DONOR, {
+    onCompleted: (data) => {
+      console.log(data);
+      dispatch({
+        type: "UPDATE",
+        payload: data.updateDonor.donor,
+      });
+      setUpdated(true);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
   useEffect(() => {
     console.log(data);
-  }, [data]);
+    if (data && donor["id"] && !updated) {
+      if (donor.user.role.name == "Donor") {
+        updateDonor({
+          variables: {
+            fields: {
+              data: {
+                visitedTags: _.uniq([
+                  ...donor.visitedTags.map((tag) => tag.id),
+                  ...data.project.tags.map((tag) => tag.id),
+                ]),
+              },
+              where: {
+                id: donor.id,
+              },
+            },
+          },
+        });
+      }
+    }
+  }, [data, updated]);
 
   const [createDonation] = useMutation(CREATE_DONATION, {
     onCompleted: (data) => {

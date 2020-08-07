@@ -313,15 +313,42 @@ function Organization({ organizationID }) {
                   </Grid>
                   <Grid container style={{ marginLeft: "65px" }}>
                     <Grid item md={7} style={{ display: "flex" }}>
-                      {donor &&
-                      donor.portfolios.filter(
-                        (portfolio) =>
-                          portfolio.organization.id == data.organizations[0].id
-                      ).length ? (
-                        <Link href="/portfolio">
+                      {donor["id"] ? (
+                        donor.user.role.name == "Donor" &&
+                        donor.portfolios.filter(
+                          (portfolio) =>
+                            portfolio.organization.id ==
+                            data.organizations[0].id
+                        ).length ? (
+                          <Link href="/portfolio">
+                            <Button
+                              title="Added to Portfolio"
+                              variant="outlined"
+                              style={{
+                                marginTop: "0px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                minWidth: "200px",
+                                height: "auto",
+                                border: "0",
+                                fontSize: "15px",
+                                fontWeight: "700",
+                                borderRadius: "10px",
+                                cursor: "pointer",
+                                color: "#FFFFFF",
+                                backgroundColor: "#05B890",
+                                position: "relative",
+                                overflow: "hidden",
+                                zIndex: "1",
+                              }}
+                            />
+                          </Link>
+                        ) : donor.user.role.name == "Donor" ? (
                           <Button
-                            title="Added to Portfolio"
-                            variant="outlined"
+                            title="Add to Portfolio"
+                            variant="textButton"
+                            onClick={handlePortfolio}
                             style={{
                               marginTop: "0px",
                               display: "flex",
@@ -341,32 +368,8 @@ function Organization({ organizationID }) {
                               zIndex: "1",
                             }}
                           />
-                        </Link>
-                      ) : (
-                        <Button
-                          title="Add to Portfolio"
-                          variant="textButton"
-                          onClick={handlePortfolio}
-                          style={{
-                            marginTop: "0px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            minWidth: "200px",
-                            height: "auto",
-                            border: "0",
-                            fontSize: "15px",
-                            fontWeight: "700",
-                            borderRadius: "10px",
-                            cursor: "pointer",
-                            color: "#FFFFFF",
-                            backgroundColor: "#05B890",
-                            position: "relative",
-                            overflow: "hidden",
-                            zIndex: "1",
-                          }}
-                        />
-                      )}
+                        ) : null
+                      ) : null}
                       {portfolio ? (
                         <Dialog
                           open={portfolio}
