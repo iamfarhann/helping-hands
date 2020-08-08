@@ -23,48 +23,97 @@ import SectionWrapper, {
   Item,
 } from "./fundraiserSection.style";
 import { Box, Typography, Grid, Paper, Divider } from "@material-ui/core";
+import { GET_PROJECT } from "../../../lib/queries";
 
-const FundraiserSection = () => {
+import Skeleton from "@material-ui/lab/Skeleton";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import Moment from "moment";
+
+const FundraiserSection = ({ project }) => {
+  const { data, loading, error, refetch } = useQuery(GET_PROJECT, {
+    variables: { id: project.id },
+    skip: !project,
+  });
+
   return (
-    <Grid item md={12} style={{ marginTop: "40px", marginRight: "10px" }}>
-      <Image src="/image/charity/branch/image2.jpg" alt="Charity" />
+    <>
+      {!data ? (
+        <Box width="100%" p={2}>
+          <Skeleton variant="rect" width="100%" height="170px" />
+          <Skeleton width="100%" />
+          <Divider />
+          <Skeleton width="50%" />
+          <Divider />
+          <Skeleton width="70%" />
+          <Divider />
+          <Skeleton width="30%" />
+          <Divider />
+          <Skeleton variant="rect" width="100%" height="30px" />
+        </Box>
+      ) : (
+        <Box width="100%" p={2}>
+          <Image
+            loading="lazy"
+            src={`${process.env.PLAIN_URL}${data.project.titleImage.url}`}
+            alt="Project Image"
+            style={{
+              marginBottom: "10px",
+              height: "150px",
+              objectFit: "cover",
+            }}
+          />
 
-      <Heading as="h4" content="Helping Hand For The Homeless" />
-      <Divider />
+          <Heading
+            as="h4"
+            content={data.project.name}
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          />
 
-      <Text content="Date: 03/21/2020" />
-      <Divider />
-      <Text content="Target: PKR. 50,000.00" />
-      <Divider />
-      <Text content="Location: Lahore" />
-      <Divider />
-      <a href="/update">
-        <Button
-          title="Give Update"
-          variant="textButton"
-          fullWidth
-          style={{
-            marginTop: "20px",
+          <Divider style={{ marginBottom: "5px" }} />
 
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minWidth: "100%",
-            height: "auto",
-            border: "0",
-            fontSize: "15px",
-            fontWeight: "700",
-            borderRadius: "10px",
-            cursor: "pointer",
-            color: "#FFFFFF",
-            backgroundColor: "#05B890",
-            position: "relative",
-            overflow: "hidden",
-            zIndex: "1",
-          }}
-        />
-      </a>
-    </Grid>
+          <Text
+            content={`Date: ${Moment(data.project.createdAt).format(
+              "DD-MM-YYYY"
+            )}`}
+          />
+          <Divider style={{ marginBottom: "5px" }} />
+          <Text content={`Target Amount: ${data.project.targetAmount} Rs.`} />
+          <Divider style={{ marginBottom: "5px" }} />
+          <Text content={`status: ${data.project.status}`} />
+          <Divider style={{ marginBottom: "5px" }} />
+          <Link href={`/update?project=${data.project.id}`}>
+            <Button
+              title="Give Update"
+              variant="textButton"
+              fullWidth
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: "100%",
+                height: "auto",
+                border: "0",
+                fontSize: "15px",
+                fontWeight: "700",
+                borderRadius: "10px",
+                cursor: "pointer",
+                color: "#FFFFFF",
+                backgroundColor: "#05B890",
+                position: "relative",
+                overflow: "hidden",
+                zIndex: "1",
+              }}
+            />
+          </Link>
+        </Box>
+      )}
+    </>
   );
 };
 

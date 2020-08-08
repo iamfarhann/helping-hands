@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import Head from "next/head";
 import Sticky from "react-stickynode";
@@ -34,6 +35,18 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import TextField from "@material-ui/core/TextField";
 import { DropzoneArea } from "material-ui-dropzone";
+
+import Text from "../common/src/components/Text";
+
+import axios from "axios";
+import { useData, useDispatchUser } from "../lib/userData";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { CREATE_UPDATE } from "../lib/mutations";
+
+import Button from "../common/src/components/Button";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -48,27 +61,103 @@ function ListItemLink(props) {
 
 export default () => {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "Shaukat Khanum",
-    policy: "oneTime",
+  const { query } = useRouter();
+  const organization = useData();
+  const dispatch = useDispatchUser();
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState("");
+  const [createUpdate] = useMutation(CREATE_UPDATE, {
+    onCompleted: (data) => {
+      console.log(data);
+      // dispatch({
+      //   type: "UPDATE",
+      //   payload: data.updateOrganization.organization,
+      // });
+      setCreateError("Project Added succesfully!");
+      setCreateLoading(false);
+      handleReset();
+    },
+    onError: (error) => {
+      console.log(error);
+      setCreateError("Sorry an error occurred. Please try again!");
+    },
   });
 
-  const handleFormData = (value, name) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
-  };
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      update: "",
+      images: [],
+    },
+    onSubmit: (values) => {
+      console.log("On Submit");
+      console.log(values, "Query", query.project);
 
-  const handleDonation = (e) => {
-    e.preventDefault();
-    console.log("Donation form data: ", state);
+      setCreateLoading(true);
+      setCreateError(null);
+      createUpdate({
+        variables: {
+          field: {
+            data: {
+              images: values.images.length ? values.images : null,
+              update: values.update,
+              project: query.project,
+            },
+          },
+        },
+      });
+    },
+    validationSchema: Yup.object().shape({
+      update: Yup.string().required("Please Enter Project Update!"),
+      images: Yup.array(),
+    }),
+  });
+  const handlefiles = async (files, type) => {
+    console.log(files, type);
+    if (files.length) {
+      setCreateLoading(true);
 
-    setState({
-      ...state,
-      price: "",
-    });
+      const form = new FormData();
+      files.forEach((file) => {
+        form.append("files", file);
+      });
+      try {
+        await axios
+          .post("http://localhost:1337/upload", form, {
+            headers: {
+              "Content-type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            //setFileIDs([...filedIds, ...res.data]);
+
+            if (type == "images") {
+              let images = [];
+              res.data.map((img) => {
+                images.push(img.id);
+              });
+
+              setFieldValue("images", images);
+            }
+
+            setCreateLoading(false);
+          });
+      } catch (error) {
+        console.log(error, "error");
+        setCreateError("Sorry an error occurred. Please try again!");
+      }
+    } else {
+      setFieldValue("images", []);
+    }
   };
 
   return (
@@ -159,7 +248,13 @@ export default () => {
                       />{" "}
                       {/* FIXME: Color of text fields */}
                       <TextField
-                        id="outlined-basic"
+                        name="update"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={errors.update && touched.update}
+                        helperText={
+                          errors.update && touched.update ? errors.update : null
+                        }
                         label=""
                         variant="outlined"
                         size="large"
@@ -177,9 +272,45 @@ export default () => {
                     <DropzoneArea
                       acceptedFiles={["image/*"]}
                       dropzoneText={"Drag and drop images here or click"}
-                      onChange={(files) => console.log("Files:", files)}
+                      onChange={(files) => handlefiles(files, "images")}
                     />
                   </Container>
+                  <Grid
+                    container
+                    item
+                    md={12}
+                    style={{
+                      paddingLeft: "40px",
+                      alignContent: "center",
+                    }}
+                  >
+                    {createError ? (
+                      <Text style={{ color: "orange" }} content={createError} />
+                    ) : null}
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    md={12}
+                    style={{ alignContent: "center" }}
+                  >
+                    <Button
+                      title="Send Update"
+                      variant="extendedFab"
+                      onClick={handleSubmit}
+                      disabled={createLoading}
+                      isLoading={createLoading}
+                      style={{
+                        marginTop: "20px",
+                        marginLeft: "260px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: "200px",
+                        height: "auto",
+                      }}
+                    />
+                  </Grid>
                 </Paper>
               </Grid>
             </Grid>

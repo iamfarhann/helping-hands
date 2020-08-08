@@ -293,35 +293,37 @@ function Project({ projectID }) {
                     style={{ borderRadius: 4, cursor: "pointer" }}
                   />
                 </Grid>
-                <Grid
-                  item
-                  container
-                  md={12}
-                  spacing={2}
-                  style={{ paddingRight: 0, margin: 0 }}
-                >
-                  {data.project.relatedImages.map((item, index) => {
-                    return (
-                      <Grid item md={2} key={item.id}>
-                        <img
-                          src={`${process.env.PLAIN_URL}${item.url}`}
-                          onClick={() => {
-                            setToggler(!toggler);
-                            setImageSlider(index + 1);
-                          }}
-                          style={{
-                            cursor: "pointer",
-                            height: "100px",
-                            borderRadius: 4,
-                            objectFit: "cover",
-                            width: "100%",
-                          }}
-                          loading="lazy"
-                        />
-                      </Grid>
-                    );
-                  })}
-                </Grid>
+                {data.project.relatedImages.length ? (
+                  <Grid
+                    item
+                    container
+                    md={12}
+                    spacing={2}
+                    style={{ paddingRight: 0, margin: 0 }}
+                  >
+                    {data.project.relatedImages.map((item, index) => {
+                      return (
+                        <Grid item md={2} key={item.id}>
+                          <img
+                            src={`${process.env.PLAIN_URL}${item.url}`}
+                            onClick={() => {
+                              setToggler(!toggler);
+                              setImageSlider(index + 1);
+                            }}
+                            style={{
+                              cursor: "pointer",
+                              height: "100px",
+                              borderRadius: 4,
+                              objectFit: "cover",
+                              width: "100%",
+                            }}
+                            loading="lazy"
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                ) : null}
                 <FsLightbox
                   toggler={toggler}
                   type="image"

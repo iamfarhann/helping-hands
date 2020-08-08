@@ -36,7 +36,10 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import FundraiserSection from "../containers/Charity/Project";
+import { useRouter } from "next/router";
+import { useData, useDispatchUser } from "../lib/userData";
+import ProjectCard from "../containers/Charity/ProjectOrganization";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -51,27 +54,17 @@ function ListItemLink(props) {
 
 export default () => {
   const classes = useStyles();
-  const [state, setState] = useState({
-    price: "",
-    currency: "Shaukat Khanum",
-    policy: "oneTime",
-  });
+  const { query } = useRouter();
+  const organization = useData();
+  const dispatch = useDispatchUser();
 
-  const handleFormData = (value, name) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
-  };
+  const handleLogout = () => {
+    console.log("logout called");
+    cookie.remove("token");
 
-  const handleDonation = (e) => {
-    e.preventDefault();
-    console.log("Donation form data: ", state);
+    dispatch({ type: "LOGOUT", payload: {} });
 
-    setState({
-      ...state,
-      price: "",
-    });
+    window.location = "/";
   };
 
   return (
@@ -170,24 +163,15 @@ export default () => {
                       }
                     /> */}
                     <Grid container>
-                      <Grid item md={4}>
-                        <FundraiserSection />
-                      </Grid>
-                      <Grid item md={4}>
-                        <FundraiserSection />
-                      </Grid>
-                      <Grid item md={4}>
-                        <FundraiserSection />
-                      </Grid>
-                      <Grid item md={4}>
-                        <FundraiserSection />
-                      </Grid>
-                      <Grid item md={4}>
-                        <FundraiserSection />
-                      </Grid>
-                      <Grid item md={4}>
-                        <FundraiserSection />
-                      </Grid>
+                      {organization["id"]
+                        ? organization.projects.map((project) => {
+                            return (
+                              <Grid item md={4} key={project.id}>
+                                <ProjectCard project={project} />
+                              </Grid>
+                            );
+                          })
+                        : null}
                     </Grid>
                   </Container>
                 </Paper>

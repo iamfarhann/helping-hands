@@ -273,6 +273,7 @@ export default () => {
       }
     }
   };
+
   const handleLogout = () => {
     console.log("logout called");
     cookie.remove("token");
@@ -341,7 +342,7 @@ export default () => {
                           </ListItem>
                         </Link>
                         <Divider />
-                        <Link href="/myProjects">
+                        <Link href="/pastProject">
                           <ListItem button>
                             <ListItemIcon>
                               <AssessmentIcon />
