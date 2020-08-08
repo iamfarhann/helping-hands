@@ -202,28 +202,34 @@ export default () => {
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
-                        <ListItem button component="a" href="/account_o">
-                          <ListItemIcon>
-                            <AccountCircleIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Account" />
-                        </ListItem>
+                        <Link href="/account_o">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Account" />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button component="a" href="/addProject">
-                          <ListItemIcon>
-                            <BusinessCenterIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Add Project " />
-                        </ListItem>
+                        <Link href="/addProject">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <BusinessCenterIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Add Project " />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button component="a" href="/myProjects">
-                          <ListItemIcon>
-                            <AssessmentIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Projects" />
-                        </ListItem>
+                        <Link href="/pastProject">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AssessmentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Projects" />
+                          </ListItem>
+                        </Link>
                         <Divider />
-                        <ListItem button>
+                        <ListItem button onClick={handleLogout}>
                           <ListItemIcon>
                             <PowerSettingsNewIcon />
                           </ListItemIcon>

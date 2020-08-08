@@ -109,30 +109,32 @@ export default () => {
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
-                        <Link href="/account">
+                        <Link href="/account_o">
                           <ListItem button>
                             <ListItemIcon>
                               <AccountCircleIcon />
                             </ListItemIcon>
-                            <ListItemText primary="My Profile" />
+                            <ListItemText primary="Account" />
                           </ListItem>
                         </Link>
                         <Divider />
-                        <Link href="/portfolio">
+                        <Link href="/addProject">
                           <ListItem button>
                             <ListItemIcon>
                               <BusinessCenterIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Portfolio " />
+                            <ListItemText primary="Add Project " />
                           </ListItem>
                         </Link>
                         <Divider />
-                        <ListItem button component="a" href="/pastProject">
-                          <ListItemIcon>
-                            <AssessmentIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Past Projects" />
-                        </ListItem>
+                        <Link href="/pastProject">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <AssessmentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Projects" />
+                          </ListItem>
+                        </Link>
                         <Divider />
                         <ListItem button onClick={handleLogout}>
                           <ListItemIcon>
