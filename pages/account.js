@@ -43,12 +43,7 @@ import PasswordField from "material-ui-password-field";
 
 import InputGroup from "../common/src/components/InputGroup";
 import RadioGroup from "../common/src/components/RadioGroup";
-import SectionWrapper, {
-  ContentArea,
-  ButtonGroup,
-  DonationForm,
-  DonateButton,
-} from "../containers/Charity/donateSection/donateSection.style";
+
 import { addCredits, currencyOptions } from "../common/src/data/Charity";
 
 import cookie from "js-cookie";
