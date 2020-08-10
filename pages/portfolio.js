@@ -52,7 +52,7 @@ import SectionWrapper, {
   ButtonGroup,
   DonationForm,
   DonateButton,
-} from "../containers/Charity/donateSection/DonateSection.style";
+} from "../containers/Charity/DonateSection/donateSection.style";
 
 import { paymentPolicy, currencyOptions } from "../common/src/data/Charity";
 
