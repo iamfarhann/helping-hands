@@ -534,7 +534,7 @@ function Project({ projectID }) {
                       <ShareModal
                         status={openShare}
                         modalClose={() => setOpenShare(false)}
-                        url={`http://localhost:3000/projects/${data.project.id}`}
+                        url={`https://esaar.org.pk/projects/${data.project.id}`}
                         heading={`Share this project`}
                       />
                     ) : null}

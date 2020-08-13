@@ -170,7 +170,7 @@ export default () => {
       });
       try {
         await axios
-          .post("http://localhost:1337/upload", form, {
+          .post(`${process.env.PLAIN_URL}/upload`, form, {
             headers: {
               "Content-type": "multipart/form-data",
             },

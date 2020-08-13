@@ -1,1 +1,0 @@
-{"ast":null,"code":"import cookie from 'js-cookie';\nexport default function getToken() {\n  const token = cookie.get('token');\n  return token;\n}","map":null,"metadata":{},"sourceType":"module"}
