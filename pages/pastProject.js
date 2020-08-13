@@ -38,7 +38,9 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import { useRouter } from "next/router";
 import { useData, useDispatchUser } from "../lib/userData";
-import ProjectCard from "../containers/Charity/ProjectOrganization";
+import ProjectCard from "../containers/Charity/Project";
+import { useQuery, useMutation, useLazyQuery } from "@apollo/react-hooks";
+import { GET_PROJECT } from "../lib/queries";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +57,7 @@ function ListItemLink(props) {
 export default () => {
   const classes = useStyles();
   const { query } = useRouter();
-  const organization = useData();
+  const donor = useData();
   const dispatch = useDispatchUser();
 
   const handleLogout = () => {
@@ -165,11 +167,11 @@ export default () => {
                       }
                     /> */}
                     <Grid container>
-                      {organization["id"]
-                        ? organization.projects.map((project) => {
+                      {donor["id"]
+                        ? donor.donations.map((donation) => {
                             return (
-                              <Grid item md={4} key={project.id}>
-                                <ProjectCard project={project} />
+                              <Grid item md={4} key={donation.id}>
+                                <ProjectCard project={donation.project} />
                               </Grid>
                             );
                           })
