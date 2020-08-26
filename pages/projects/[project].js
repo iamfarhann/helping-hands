@@ -353,15 +353,16 @@ function Project({ projectID }) {
                     />
                   </Grid>
                   <Grid item md={11}>
-                    <a
-                      href={`http://localhost:3000/Organizations/${data.project.organization.id}`}
+                    <Link
+                      href="/organizations/[organization]"
+                      as={`/organizations/${data.project.organization.id}`}
                     >
                       <Heading
                         content={`${data.project.organization.organizationName} is organizing this fundraiser`}
-                        style={{ margin: "0px" }}
+                        style={{ margin: "0px", cursor: "pointer" }}
                         as="h3"
                       />
-                    </a>
+                    </Link>
                   </Grid>
                   <Grid item md={12}>
                     <Divider />

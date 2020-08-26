@@ -64,10 +64,13 @@ const BranchSection = () => {
                         href={`/organizations/[organization]`}
                         as={`/organizations/${item.id}`}
                       >
-                        <a className="learn__more-btn">
+                        <span
+                          className="learn__more-btn"
+                          style={{ cursor: "pointer" }}
+                        >
                           <span className="hyphen" />
                           <span className="btn_text">{`SEE MORE OF OUR IMPACT`}</span>
-                        </a>
+                        </span>
                       </Link>
                       <Box
                         width={1}
