@@ -41,7 +41,7 @@ import { useData, useDispatchUser } from "../lib/userData";
 import ProjectCard from "../containers/Charity/Project";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/react-hooks";
 import { GET_PROJECT } from "../lib/queries";
-
+import cookie from "js-cookie";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",

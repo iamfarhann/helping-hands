@@ -25,8 +25,10 @@ module.exports = withPlugins(
       },
       env: {
         SERVER_URL: "https://admin.esaar.org.pk/graphql",
+
         // AVATAR_URL:'https://api.adorable.io/avatars/285/',
         PLAIN_URL: "https://admin.esaar.org.pk",
+
         // PLAIN_URL:"http://34.87.95.159/",
       },
     }),

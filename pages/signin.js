@@ -247,6 +247,7 @@ export default function signup() {
                           isLoading={loginLoading}
                           style={{
                             marginTop: "20px",
+                            marginBottom: "20px",
                             marginLeft: "230px",
                             display: "flex",
                             alignItems: "center",
@@ -257,7 +258,9 @@ export default function signup() {
                         />
                       </Grid>
                       <Grid container item md={12}>
-                        <a href="/signup_o">Forgot Password?</a>
+                        <a href="/signup">
+                          Not signed up? Click here to register as donor
+                        </a>
                       </Grid>
                     </Grid>
                   </Container>

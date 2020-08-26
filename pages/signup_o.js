@@ -70,6 +70,7 @@ export default () => {
               password: formValues.password,
               confirmed: true,
               isDonor: false,
+              role: "organization",
             },
           },
         },

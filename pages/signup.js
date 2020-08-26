@@ -46,9 +46,11 @@ export default function signup() {
       router.push("/signin");
     },
     onError: ({ graphQLErrors, networkError }) => {
-      console.log("Register Error");
-      setLoginError("User already exists");
-      setLoginLoading(false);
+      console.log("Register Error", graphQLErrors);
+      // setLoginError("User already exists");
+      // setLoginLoading(false);
+
+      router.push("/signin");
     },
   });
 
@@ -65,6 +67,7 @@ export default function signup() {
               password: formValues.password,
               confirmed: true,
               isDonor: true,
+              role: "donor",
             },
           },
         },
