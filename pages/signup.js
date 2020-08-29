@@ -45,7 +45,7 @@ export default function signup() {
   const [formValues, setFormValues] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
-  const [alert, setAlert] = useState(true);
+  const [alert, setAlert] = useState(false);
 
   const [registerUser] = useMutation(REGISTER, {
     onCompleted: (data) => {
@@ -212,8 +212,8 @@ export default function signup() {
                         <DialogContentText>
                           Your account details have been succesfully recieved.
                           Please wait for our team to verify your account
-                          details. In case you don't hear back, feel free to
-                          reach us out at{" "}
+                          details. In case you don't hear back within next 24
+                          hours, feel free to reach us out at{" "}
                           <a href="mailto:support@esaar.org.pk">
                             support@esaar.org.pk
                           </a>
