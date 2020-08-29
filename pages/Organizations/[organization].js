@@ -114,7 +114,9 @@ function Organization({ organizationID }) {
     },
   ];
   useEffect(() => {
-    console.log(data);
+    if (data) {
+      console.log(data);
+    }
   }, [data]);
 
   const handlePortfolio = () => {
