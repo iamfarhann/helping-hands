@@ -84,7 +84,7 @@ const FundraiserSection = ({ organization }) => {
             content={data.organizations[0].mission}
             style={{
               display: "-webkit-box",
-              WebkitLineClamp: 3,
+              WebkitLineClamp: 4,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
