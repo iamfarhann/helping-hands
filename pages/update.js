@@ -15,6 +15,8 @@ import {
   CharityWrapper,
   ContentWrapper,
 } from "../containers/Charity/charity.style";
+
+import Link from "next/link";
 import {
   Box,
   Container,
@@ -159,7 +161,12 @@ export default () => {
       setFieldValue("images", []);
     }
   };
-
+  const handleLogout = () => {
+    console.log("logout called");
+    cookie.remove("token");
+    dispatch({ type: "LOGOUT", payload: {} });
+    window.location = "/";
+  };
   return (
     <ThemeProvider theme={charityTheme}>
       <Fragment>
@@ -220,7 +227,7 @@ export default () => {
                           </ListItem>
                         </Link>
                         <Divider />
-                        <Link href="/pastProject">
+                        <Link href="/myProjects">
                           <ListItem button>
                             <ListItemIcon>
                               <AssessmentIcon />

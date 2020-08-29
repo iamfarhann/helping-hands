@@ -342,7 +342,7 @@ export default () => {
                           </ListItem>
                         </Link>
                         <Divider />
-                        <Link href="/pastProject">
+                        <Link href="/myProjects">
                           <ListItem button>
                             <ListItemIcon>
                               <AssessmentIcon />

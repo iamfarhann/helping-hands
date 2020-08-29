@@ -35,6 +35,8 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import Project from "../containers/Charity/ProjectOrganization";
 
+import { useData, useDispatchUser } from "../lib/userData";
+
 import cookie from "js-cookie";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
+  const organization = useData();
   const handleLogout = () => {
     console.log("logout called");
     cookie.remove("token");
@@ -90,7 +93,7 @@ export default () => {
               }}
             >
               <Grid item md={3}>
-                <Paper style={{ height: "100%" }}>
+                <Paper style={{ height: "90vh" }}>
                   <Container style={{ padding: "40px" }}>
                     <div className={classes.root}>
                       <List component="nav" aria-label="main mailbox folders">
@@ -139,17 +142,15 @@ export default () => {
                     {" "}
                     <Heading content="Past Projects" color="#05B890" />{" "}
                     <Divider />
-                    <Grid container>
-                      <Grid item md={4}>
-                        <Project />
-                      </Grid>
-                      <Grid item md={4}>
-                        <Project />
-                      </Grid>
-                      <Grid item md={4}>
-                        <Project />
-                      </Grid>
-                    </Grid>
+                    {organization
+                      ? organization.projects.map((project) => {
+                          return (
+                            <Grid item md={4} key={project.id}>
+                              <Project project={project} />
+                            </Grid>
+                          );
+                        })
+                      : null}
                   </Container>
                 </Paper>
               </Grid>
