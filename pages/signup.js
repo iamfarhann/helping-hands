@@ -26,6 +26,12 @@ import * as Yup from "yup";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { CREATE_DONOR, REGISTER } from "../lib/mutations";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -39,18 +45,20 @@ export default function signup() {
   const [formValues, setFormValues] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  const [alert, setAlert] = useState(true);
 
   const [registerUser] = useMutation(REGISTER, {
     onCompleted: (data) => {
       console.log(data);
-      router.push("/signin");
+      setAlert(true);
+      //router.push("/signin");
     },
     onError: ({ graphQLErrors, networkError }) => {
       console.log("Register Error", graphQLErrors);
       // setLoginError("User already exists");
       // setLoginLoading(false);
-
-      router.push("/signin");
+      setAlert(true);
+      //router.push("/signin");
     },
   });
 
@@ -191,6 +199,34 @@ export default function signup() {
                   <Container style={{ padding: "40px" }}>
                     {" "}
                     <Heading content="Sign Up" color="#05B890" /> <Divider />
+                    <Dialog
+                      maxWidth="sm"
+                      open={alert}
+                      onClose={() => router.push("/signin")}
+                      aria-labelledby="form-dialog-title"
+                    >
+                      <DialogTitle id="form-dialog-title">
+                        Registered Succesfully 🎉
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          Your account details have been succesfully recieved.
+                          Please wait for our team to verify your account
+                          details. In case you don't hear back, feel free to
+                          reach us out at{" "}
+                          <a href="mailto:support@esaar.org.pk">
+                            support@esaar.org.pk
+                          </a>
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          onClick={() => router.push("/signin")}
+                          title="Close"
+                          variant="extendedFab"
+                        />
+                      </DialogActions>
+                    </Dialog>
                     <Grid container>
                       <Grid item md={5} style={{ marginTop: "30px" }}>
                         <Heading
