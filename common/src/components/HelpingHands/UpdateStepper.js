@@ -121,25 +121,27 @@ export default function UpdateStepper({ project }) {
                 }
                 slide={imageSlide}
               />
-              {updateData.images.map((item, index) => {
-                return (
-                  <img
-                    onClick={() => {
-                      setToggler(!toggler);
-                      setImageSlider(index + 1);
-                    }}
-                    src={`${process.env.PLAIN_URL}${item.url}`}
-                    style={{
-                      borderRadius: 4,
-                      objectFit: "cover",
-                      margin: 2,
-                      height: "80px",
-                      width: "80px",
-                      cursor: "pointer",
-                    }}
-                  />
-                );
-              })}
+              {updateData.images.length
+                ? updateData.images.map((item, index) => {
+                    return (
+                      <img
+                        onClick={() => {
+                          setToggler(!toggler);
+                          setImageSlider(index + 1);
+                        }}
+                        src={`${process.env.PLAIN_URL}${item.url}`}
+                        style={{
+                          borderRadius: 4,
+                          objectFit: "cover",
+                          margin: 2,
+                          height: "80px",
+                          width: "80px",
+                          cursor: "pointer",
+                        }}
+                      />
+                    );
+                  })
+                : null}
 
               <div className={classes.actionsContainer}>
                 <div>
