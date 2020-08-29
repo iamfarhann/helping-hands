@@ -21,6 +21,7 @@ import {
   Container,
   Typography,
   Grid,
+  Hidden,
   Paper,
   Divider,
   Checkbox,
@@ -213,58 +214,60 @@ export default () => {
                 />
               </Grid>
               <Grid container alignItems="flex-start" spacing={4}>
-                <Grid item md={3}>
-                  <Paper style={{ height: "90vh" }}>
-                    <Container style={{ padding: "20px" }}>
-                      <div className={classes.root}>
-                        <Text
-                          content="Explore projects by categories:"
-                          style={{ fontSize: "20px" }}
-                        />
-
-                        <Autocomplete
-                          size="small"
-                          multiple
-                          id="tags-outlined"
-                          options={
-                            allTags
-                              ? allTags.tags.map((tag) => {
-                                  return {
-                                    id: tag.id,
-                                    value: tag.id,
-                                    label: tag.name,
-                                  };
-                                })
-                              : []
-                          }
-                          getOptionLabel={(option) => option.label}
-                          value={selectedTag}
-                          onChange={(event, newValue) => {
-                            setSelectedTag(_.uniqBy(newValue, "id"));
-                          }}
-                          //defaultValue={[top100Films[13]]}
-                          filterSelectedOptions
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              variant="outlined"
-                              label="Select Categories"
-                              placeholder="Categories"
-                            />
-                          )}
-                        />
-                        <Box display="flex" py={2} justifyContent="center">
-                          <Button
-                            title="Filter"
-                            onClick={handleFilter}
-                            variant="extendedFab"
-                            fullWidth
+                <Hidden smDown>
+                  <Grid item md={3}>
+                    <Paper style={{ height: "90vh" }}>
+                      <Container style={{ padding: "20px" }}>
+                        <div className={classes.root}>
+                          <Text
+                            content="Explore projects by categories:"
+                            style={{ fontSize: "20px" }}
                           />
-                        </Box>
-                      </div>
-                    </Container>
-                  </Paper>
-                </Grid>
+
+                          <Autocomplete
+                            size="small"
+                            multiple
+                            id="tags-outlined"
+                            options={
+                              allTags
+                                ? allTags.tags.map((tag) => {
+                                    return {
+                                      id: tag.id,
+                                      value: tag.id,
+                                      label: tag.name,
+                                    };
+                                  })
+                                : []
+                            }
+                            getOptionLabel={(option) => option.label}
+                            value={selectedTag}
+                            onChange={(event, newValue) => {
+                              setSelectedTag(_.uniqBy(newValue, "id"));
+                            }}
+                            //defaultValue={[top100Films[13]]}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Select Categories"
+                                placeholder="Categories"
+                              />
+                            )}
+                          />
+                          <Box display="flex" py={2} justifyContent="center">
+                            <Button
+                              title="Filter"
+                              onClick={handleFilter}
+                              variant="extendedFab"
+                              fullWidth
+                            />
+                          </Box>
+                        </div>
+                      </Container>
+                    </Paper>
+                  </Grid>
+                </Hidden>
 
                 {data ? (
                   <Grid container item md={9} spacing={4}>

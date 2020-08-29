@@ -21,10 +21,7 @@ const Navbar = () => {
           />
         </Link>
         <MenuWrapper>
-          <a
-            href="/account_o"
-            style={{ marginRight: "10px", color: "#060F1E" }}
-          >
+          <a href="/signup_o" style={{ marginRight: "10px", color: "#060F1E" }}>
             <span className="smooth_scroll">Organize Fundraiser</span>
           </a>
           {user["id"] ? (
