@@ -85,7 +85,7 @@
     "react-stickynode": "^2.1.1",
     "styled-components": "^5.0.0",
     "styled-system": "4.1.0",
-    "swiper": "^5.1.0",
+    "swiper": "^6.5.1",
     "yup": "^0.29.1"
   },
   "devDependencies": {
